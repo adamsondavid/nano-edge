@@ -1,30 +1,22 @@
 # Homebrew Serverless
 
-Output API
+General Note: do not deploy secrets that are really secret! these secrets might be exploitable!
 
-functions
+## Build output API example:
 
-- api.js
+- functions/api/main.js
+- functions/env.js
+- static/index.html
+- static/main.js
 
-static
+The signature of a function is `export default async (request: Request) => Promise<Response>`.\
+A function can access env vars by using process.env
 
-- index.html
-- main.js
+## How inbound traffic would be handled by which resource from the build output:
 
-/api -> functions/api.js
-
-/api/some/sub/path -> functions/api.js
-
-/index.html -> static/index.html
-
-/main.js -> static/main.js
-
-/some/random/path -> static/index.html
-
-if a static file exists with same name as a function, the function is served
-
-do not deploy secrets that are really secret! these secrets might be exploitable!
-
-a function can access env vars by process.env
-
-the signature of a function is `export default async (request: Request) => Promise<Response>`
+- `/api` -> `functions/api/main.js` (runtime worker exec)
+- `/api/some/sub/path` -> `functions/main/api.js` (runtime worker exec)
+- `/index.html` -> `static/index.html` (runtime serve static)
+- `/main.js` -> `static/main.js` (runtime serve static)
+- `/some/random/path` -> `static/index.html` (runtime serve static)
+- Edge case: If a static file exists with same name as a function, the function is served
