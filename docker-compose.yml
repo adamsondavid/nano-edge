@@ -5,10 +5,23 @@ services:
     build:
       context: "runtime"
     restart: "always"
+    deploy:
+      mode: replicated
+      replicas: 2
     volumes:
       - "./deployments:/app/deployments"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.runtime.rule=HostRegexp(`.+\\.localhost`)"
+  ingress:
+    image: "traefik:v3.0"
+    restart: "always"
+    command:
+      - "--providers.docker"
+      - "--providers.docker.exposedbydefault=false"
+      - "--api.insecure"
+      - "--entryPoints.web.address=:80"
     ports:
-      - "8080:9000"
-
-volumes:
-  deployments:
+      - "80:80"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"

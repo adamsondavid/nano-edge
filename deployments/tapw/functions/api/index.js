@@ -1,7 +1,6 @@
 // This file will be generated
 
-import fetch from "./main.js";
 import env from "../env.js";
-
-globalThis.process = { env };
+window.process = { env };
+const { default: fetch } = await import("./main.js");
 Deno.serve(fetch);
