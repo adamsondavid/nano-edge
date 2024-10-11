@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  runtime:
+    build:
+      context: "runtime"
+    restart: "always"
+    volumes:
+      - "./deployments:/app/deployments"
+    ports:
+      - "8080:9000"
+
+volumes:
+  deployments:
