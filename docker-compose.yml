@@ -1,17 +1,28 @@
 version: "3.8"
 services:
+  storage:
+    build:
+      context: "storage"
+    restart: "always"
+    volumes:
+      - "./deployments:/static/deployments"
+    labels:
+      - "traefik.enable=true" # TODO: disable
+      - "traefik.http.routers.storage.rule=Host(`storage.localhost`)" # TODO: do not expose directly
   runtime:
     build:
       context: "runtime"
     restart: "always"
     deploy:
-      mode: replicated
+      mode: "replicated"
       replicas: 2
     volumes:
-      - "./deployments:/app/deployments"
+      - "./deployments:/app/deployments:ro"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.runtime.rule=HostRegexp(`.+\\.localhost`)"
+      - "traefik.http.routers.runtime.rule=HostRegexp(`.+\\.app\\.localhost`)"
+    depends_on:
+      - "storage"
   ingress:
     image: "traefik:v3.0"
     restart: "always"

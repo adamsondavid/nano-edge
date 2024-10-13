@@ -15,7 +15,7 @@ A function can access env vars by using process.env
 ## How inbound traffic would be handled by which resource from the build output:
 
 - `/api` -> `functions/api/main.js` (runtime worker exec)
-- `/api/some/sub/path` -> `functions/main/api.js` (runtime worker exec)
+- `/api/some/sub/path` -> `functions/api/main.js` (runtime worker exec)
 - `/index.html` -> `static/index.html` (runtime serve static)
 - `/main.js` -> `static/main.js` (runtime serve static)
 - `/some/random/path` -> `static/index.html` (runtime serve static)
