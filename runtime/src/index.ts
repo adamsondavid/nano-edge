@@ -1,4 +1,5 @@
 import { serveDir, serveFile } from "./deps.ts";
+import { download } from "./download.ts";
 
 type Function = {
   name: string;
@@ -7,26 +8,30 @@ type Function = {
 
 type Deployment = {
   name: string;
+  root: string;
   functions: Map<string, Function>;
 };
 
 const deployments = new Map<string, Deployment>();
+
+// TODO: do not manually create deployments
+const root = await download("tapw");
 // deno-lint-ignore ban-ts-comment
 // @ts-ignore
 const worker = await EdgeRuntime.userWorkers.create({
-  servicePath: "deployments/tapw/functions/api",
+  servicePath: `${root}/functions/api`,
   forceCreate: true,
   memoryLimitMb: 128,
   workerTimeoutMs: 15_000,
 });
 const functions = new Map();
 functions.set("api", { name: "api", fetch: (req: Request) => worker.fetch(req) });
-deployments.set("tapw", { name: "tapw", functions });
+deployments.set("tapw", { name: "tapw", root, functions });
 
 Deno.serve(async (req: Request) => {
   const url = new URL(req.url);
 
-  // TODO: download deployments
+  // TODO: download deployments dynamically
   const deployment = deployments.get(url.hostname.split(".")[0]);
   if (!deployment) return new Response("Not Found", { status: 404 });
 
@@ -40,7 +45,7 @@ Deno.serve(async (req: Request) => {
     }
   }
 
-  const res = await serveDir(req, { fsRoot: `deployments/${deployment.name}/static` });
-  if (res.status === 404) return serveFile(req, `deployments/${deployment.name}/static/index.html`);
+  const res = await serveDir(req, { fsRoot: `${deployment.root}/static` });
+  if (res.status === 404) return serveFile(req, `${deployment.root}/static/index.html`);
   return res;
 });

@@ -5,10 +5,7 @@ services:
       context: "storage"
     restart: "always"
     volumes:
-      - "./deployments:/static/deployments"
-    labels:
-      - "traefik.enable=true" # TODO: disable
-      - "traefik.http.routers.storage.rule=Host(`storage.localhost`)" # TODO: do not expose directly
+      - "./example-deployments:/www/deployments" # TODO: mount volume, remove examples in the long run
   runtime:
     build:
       context: "runtime"
@@ -16,11 +13,9 @@ services:
     deploy:
       mode: "replicated"
       replicas: 2
-    volumes:
-      - "./deployments:/app/deployments:ro"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.runtime.rule=HostRegexp(`.+\\.app\\.localhost`)"
+      - "traefik.http.routers.runtime.rule=HostRegexp(`.+\\.localhost`)"
     depends_on:
       - "storage"
   ingress:
