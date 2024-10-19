@@ -1,4 +1,4 @@
-FROM supabase/edge-runtime:v1.58.3
+FROM supabase/edge-runtime:v1.59.0
 WORKDIR /app
 COPY src/deps.ts src/deps.ts
 RUN edge-runtime bundle --entrypoint src/deps.ts && rm bin.eszip
