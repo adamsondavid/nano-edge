@@ -22,7 +22,7 @@ export async function download(deployment: string) {
     if (!entry.readable) continue;
 
     if (file === "functions/env.json") {
-      console.log(await toJson(entry.readable));
+      console.log(await toJson(entry.readable)); // TODO: pass env vars to worker!
     } else {
       const parsedFilePath = parse(file);
       if (parsedFilePath.dir === "functions" && parsedFilePath.ext === ".js") {

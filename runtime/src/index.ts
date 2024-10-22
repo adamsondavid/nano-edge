@@ -1,8 +1,6 @@
 import { serveDir, serveFile } from "std/http";
 import { download } from "./download.ts";
 
-console.log(Deno.env.toObject());
-
 type Deployment = {
   name: string;
   root: string;
@@ -13,7 +11,7 @@ const deployments = new Map<string, Deployment>();
 
 // TODO: do not manually create deployments
 const root = await download("tapw");
-const functions = new Set<string>(["api", "bpi"]);
+const functions = new Set<string>(["api", "bpi", "cpi", "dpi", "epi"]);
 deployments.set("tapw", { name: "tapw", root, functions });
 
 Deno.serve(async (req: Request) => {
@@ -33,6 +31,7 @@ Deno.serve(async (req: Request) => {
         memoryLimitMb: 128,
         workerTimeoutMs: 15_000,
         remoteModules: false,
+        envVars: [["FUNCTIONS_BLOCKED_NETWORKS", Deno.env.get("FUNCTIONS_BLOCKED_NETWORKS")]],
       });
       return fn.fetch(req);
     } catch (e) {
