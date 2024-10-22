@@ -19,7 +19,7 @@ services:
     depends_on:
       - "storage"
     environment:
-      FUNCTIONS_BLOCKED_NETWORKS: "192.168.1.0/8" # TODO: add more blocked networks
+      FUNCTIONS_BLOCKED_NETWORKS: "192.168.0.0/16"
   ingress:
     image: "traefik:v3.0"
     restart: "always"
