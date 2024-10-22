@@ -1,8 +1,7 @@
-import { serveDir, serveFile } from "./deps.ts";
+import { serveDir, serveFile } from "std/http";
 import { download } from "./download.ts";
 
-// TODO
-console.log(Deno.networkInterfaces());
+console.log(Deno.env.toObject());
 
 type Deployment = {
   name: string;
@@ -14,7 +13,7 @@ const deployments = new Map<string, Deployment>();
 
 // TODO: do not manually create deployments
 const root = await download("tapw");
-const functions = new Set<string>(["api"]);
+const functions = new Set<string>(["api", "bpi"]);
 deployments.set("tapw", { name: "tapw", root, functions });
 
 Deno.serve(async (req: Request) => {
@@ -33,6 +32,7 @@ Deno.serve(async (req: Request) => {
         servicePath: `${root}/functions/${functionName}`,
         memoryLimitMb: 128,
         workerTimeoutMs: 15_000,
+        remoteModules: false,
       });
       return fn.fetch(req);
     } catch (e) {
