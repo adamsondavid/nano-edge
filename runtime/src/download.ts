@@ -11,7 +11,7 @@ async function createFile(path: string) {
 
 export async function download(deployment: string) {
   const res = await fetch(`http://storage/deployments/${deployment}.tar.gz`);
-  if (res.status !== 200 || !res.body) throw new Error(`failed to download deployment: ${deployment}`);
+  if (!res.ok || !res.body) throw new Error(`failed to download deployment: ${deployment}`);
   const outputRoot = `deployments/${deployment}/${crypto.randomUUID()}`;
   for await (
     const entry of res.body
