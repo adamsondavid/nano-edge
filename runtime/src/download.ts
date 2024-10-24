@@ -21,7 +21,7 @@ export async function download(deployment: string) {
       .pipeThrough(new DecompressionStream("gzip"))
       .pipeThrough(new UntarStream())
   ) {
-    let file = entry.path.replace(`${deployment}/`, "");
+    let file = entry.path;
     if (!entry.readable) continue;
 
     if (file === "functions/env.json") {
