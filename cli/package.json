@@ -1,0 +1,43 @@
+{
+  "name": "@homebrew-serverless/cli",
+  "version": "0.1.0",
+  "type": "module",
+  "author": "David Adamson",
+  "license": "MIT",
+  "description": "A simple CLI used to deploy an app to the homebrew-serverless platform",
+  "keywords": [
+    "cli",
+    "homebrew-serverless"
+  ],
+  "homepage": "https://github.com/adamsondavid/homebrew-serverless",
+  "bugs": {
+    "url": "https://github.com/adamsondavid/homebrew-serverless/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adamsondavid/homebrew-serverless.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "bin": {
+    "homebrew-serverless": "dist/bin/index.js"
+  },
+  "main": "dist/src/index.js",
+  "scripts": {
+    "check:format": "prettier --ignore-path ../.gitignore --check .",
+    "build": "esbuild bin/index.ts --bundle --minify --packages=external --outfile=dist/bin/index.js --platform=node --format=esm && esbuild src/index.ts --bundle --minify --packages=external --outfile=dist/src/index.js --platform=node --format=esm && tsc --emitDeclarationOnly"
+  },
+  "dependencies": {
+    "jiti": "^2.3.3",
+    "tar": "^7.4.3",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.0",
+    "esbuild": "^0.24.0",
+    "prettier": "^3.3.3",
+    "tsafe": "^1.7.5",
+    "typescript": "^5.6.3"
+  }
+}
