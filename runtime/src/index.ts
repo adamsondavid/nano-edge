@@ -6,7 +6,8 @@ Deno.serve(async (request: Request) => {
   try {
     const deployment = await download("tapw"); // TODO: cache downloaded deployment
     return await deployment.fetch(request);
-  } catch (_) {
+  } catch (e) {
+    console.error(e);
     return new Response("internal server error", { status: 500 });
   }
 });
