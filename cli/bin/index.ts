@@ -8,6 +8,8 @@ import { create } from "tar";
 import { z } from "zod";
 import { request } from "node:http";
 
+// TODO: use commander for proper cli tooling
+
 const env = z
   .object({
     HOMEBREW_SERVERLESS_APPLICATION_TOKEN: z.string().optional(), // TODO: make required!
@@ -38,11 +40,10 @@ const tarball = create(
 );
 
 const req = request("http://storage.localhost/deployments/tapw.tar.gz", { method: "PUT" }, (res) => {
-  if (!res.statusCode || (res.statusCode >= 200 && res.statusCode < 300))
-    throw new Error("failed to push deployment" + res.statusCode);
-  res.on("data", (chunk) => {
-    console.log(chunk.toString());
-  });
+  // TODO: use token for auth
+  // TODO: read or discard response body to terminate program
+  if (res.statusCode && res.statusCode >= 200 && res.statusCode < 300) return;
+  else throw new Error("failed to push deployment" + res.statusCode);
 });
 
 tarball.pipe(req);
