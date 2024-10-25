@@ -39,7 +39,7 @@ const tarball = create(
   readdirSync(config.outputDirectory),
 );
 
-const req = request("http://storage.localhost/deployments/tapw.tar.gz", { method: "PUT" }, (res) => {
+const req = request("http://localhost:8080/deployments/tapw.tar.gz", { method: "PUT" }, (res) => {
   // TODO: use token for auth
   // TODO: read or discard response body to terminate program
   if (res.statusCode && res.statusCode >= 200 && res.statusCode < 300) return;

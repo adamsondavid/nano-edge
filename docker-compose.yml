@@ -6,9 +6,8 @@ services:
     restart: "always"
     volumes:
       - "./storage-data:/deployments" # TODO: make a proper volume not only a bind mount
-    labels: # TODO: do not expose storage directly!
-      - "traefik.enable=true"
-      - "traefik.http.routers.storage.rule=Host(`storage.localhost`)"
+    ports: # TODO: do not expose the storage to the public
+      - "8080:80"
   runtime:
     build:
       context: "runtime"
