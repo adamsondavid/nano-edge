@@ -6,6 +6,7 @@ import { createJiti } from "jiti";
 import { pathToFileURL } from "node:url";
 import { create } from "tar";
 import { z } from "zod";
+import { request } from "node:http";
 
 const env = z
   .object({
@@ -28,11 +29,20 @@ if (config.env) {
   writeFileSync(`${functionsDirectory}/env.json`, JSON.stringify(config.env));
 }
 
-await create(
+const tarball = create(
   {
     gzip: true,
     cwd: config.outputDirectory,
-    file: "tapw.tar.gz", // TODO: do not write to file
   },
   readdirSync(config.outputDirectory),
 );
+
+const req = request("http://storage.localhost/deployments/tapw.tar.gz", { method: "PUT" }, (res) => {
+  if (!res.statusCode || (res.statusCode >= 200 && res.statusCode < 300))
+    throw new Error("failed to push deployment" + res.statusCode);
+  res.on("data", (chunk) => {
+    console.log(chunk.toString());
+  });
+});
+
+tarball.pipe(req);

@@ -5,7 +5,10 @@ services:
       context: "storage"
     restart: "always"
     volumes:
-      - "./example-deployments:/www/deployments" # TODO: mount volume, remove examples in the long run
+      - "./storage-data:/deployments" # TODO: make a proper volume not only a bind mount
+    labels: # TODO: do not expose storage directly!
+      - "traefik.enable=true"
+      - "traefik.http.routers.storage.rule=Host(`storage.localhost`)"
   runtime:
     build:
       context: "runtime"
@@ -15,7 +18,7 @@ services:
       replicas: 2
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.runtime.rule=HostRegexp(`.+\\.localhost`)"
+      - "traefik.http.routers.runtime.rule=HostRegexp(`.+\\.apps\\.localhost`)"
     depends_on:
       - "storage"
     environment:
@@ -32,3 +35,6 @@ services:
       - "80:80"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
+
+volumes:
+  storage:
