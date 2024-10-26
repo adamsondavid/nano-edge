@@ -1,27 +1,27 @@
 {
-  "name": "@homebrew-serverless/cli",
+  "name": "@nano-edge/cli",
   "version": "0.1.0",
   "type": "module",
   "author": "David Adamson",
   "license": "MIT",
-  "description": "A simple CLI used to deploy an app to the homebrew-serverless platform",
+  "description": "A simple CLI used to deploy an app to NanoEdge",
   "keywords": [
     "cli",
-    "homebrew-serverless"
+    "NanoEdge"
   ],
-  "homepage": "https://github.com/adamsondavid/homebrew-serverless",
+  "homepage": "https://github.com/adamsondavid/nano-edge",
   "bugs": {
-    "url": "https://github.com/adamsondavid/homebrew-serverless/issues"
+    "url": "https://github.com/adamsondavid/nano-edge/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/adamsondavid/homebrew-serverless.git"
+    "url": "git+https://github.com/adamsondavid/nano-edge.git"
   },
   "files": [
     "dist"
   ],
   "bin": {
-    "homebrew-serverless": "dist/bin/index.js"
+    "nano-edge": "dist/bin/index.js"
   },
   "main": "dist/src/index.js",
   "scripts": {

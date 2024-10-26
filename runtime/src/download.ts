@@ -25,7 +25,7 @@ export async function download(deployment: string) {
     if (!entry.readable) continue;
 
     if (file === "functions/env.json") {
-      env = await toJson(entry.readable) as Record<string, string>; // TODO: validate that object really is a Record<string, string>
+      env = await toJson(entry.readable) as Record<string, string>; // TODO: validate that object really is a Record<string, string>. Probably do the validation on the deploy-server!
     } else {
       const parsedFilePath = parse(file);
       if (parsedFilePath.dir === "functions" && parsedFilePath.ext === ".js") {

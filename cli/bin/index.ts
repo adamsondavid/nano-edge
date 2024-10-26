@@ -12,12 +12,12 @@ import { request } from "node:http";
 
 const env = z
   .object({
-    HOMEBREW_SERVERLESS_APPLICATION_TOKEN: z.string().optional(), // TODO: make required!
+    NANO_EDGE_AUTH_TOKEN: z.string(),
   })
   .parse(process.env);
 
 async function readConfig() {
-  const configFile = "./homebrew-serverless.config.ts";
+  const configFile = "./nano-edge.config.ts";
   if (!existsSync(configFile)) return validateConfig({});
   const jiti = createJiti(pathToFileURL(configFile).toString());
   const config = await jiti.import(configFile, { default: true });
@@ -39,9 +39,11 @@ const tarball = create(
   readdirSync(config.outputDirectory),
 );
 
-const req = request("http://localhost:8080/deployments/tapw.tar.gz", { method: "PUT" }, (res) => {
+// TODO: adjust endpoint url
+const req = request(`${config.nanoEdgeUrl}/deployments/${env.NANO_EDGE_AUTH_TOKEN}.tar.gz`, { method: "PUT" }, (res) => {
   // TODO: use token for auth
   // TODO: read or discard response body to terminate program
+  res.on("data", () => {})
   if (res.statusCode && res.statusCode >= 200 && res.statusCode < 300) return;
   else throw new Error("failed to push deployment" + res.statusCode);
 });

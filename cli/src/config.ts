@@ -1,7 +1,12 @@
 import { z } from "zod";
 import { assert, Equals } from "tsafe";
 
-type Config = {
+export type Config = {
+  /**
+   * The base url of the NanoEdge instance you are deploying to.
+   * Defaults to `http://localhost:8080`. // TODO: adjust url
+   */
+  nanoEdgeUrl?: string,
   /**
    * The directory that contains your built application in format of the build output api.
    * Defaults to `dist`.
@@ -15,6 +20,7 @@ type Config = {
 };
 
 const ConfigSchema = z.object({
+  nanoEdgeUrl: z.string().default("http://localhost:8080"), // TODO: adjust url
   outputDirectory: z.string().optional().default("dist"),
   env: z.record(z.string(), z.string()).optional(),
 });

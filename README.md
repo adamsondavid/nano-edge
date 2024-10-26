@@ -1,4 +1,4 @@
-# Homebrew Serverless
+# NanoEdge
 
 General Note: do not deploy secrets that are really secret! these secrets might be exploitable!
 
@@ -19,6 +19,6 @@ A function can access env vars by using process.env
 - `/index.html` -> `static/index.html` (served static)
 - `/main.js` -> `static/main.js` (served static)
 - `/some/random/path` -> `static/index.html` (served static)
-- Edge case (precedence): If a static file exists with same name as a function, the static file is
+- Edge-case (precedence): If a static file exists with same name as a function, the static file is
   not served.
   Instead, the function is executed.
