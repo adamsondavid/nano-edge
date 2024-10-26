@@ -28,7 +28,8 @@
   "main": "dist/src/index.js",
   "scripts": {
     "check:format": "prettier --ignore-path ../.gitignore --check .",
-    "build": "esbuild bin/index.ts --bundle --minify --packages=external --outfile=dist/bin/index.js --platform=node --format=esm && esbuild src/index.ts --bundle --minify --packages=external --outfile=dist/src/index.js --platform=node --format=esm && tsc --emitDeclarationOnly"
+    "build": "esbuild bin/index.ts --bundle --minify --packages=external --outfile=dist/bin/index.js --platform=node --format=esm && esbuild src/index.ts --bundle --minify --packages=external --outfile=dist/src/index.js --platform=node --format=esm && tsc --emitDeclarationOnly",
+    "prepack": "cp ../README.md README.md"
   },
   "dependencies": {
     "jiti": "^2.3.3",
