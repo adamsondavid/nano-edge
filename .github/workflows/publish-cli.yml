@@ -6,6 +6,9 @@ on:
 jobs:
   publish-cli:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     defaults:
       run:
         working-directory: cli
