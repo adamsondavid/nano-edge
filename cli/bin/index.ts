@@ -39,13 +39,17 @@ const tarball = create(
   readdirSync(config.outputDirectory),
 );
 
-const req = request(`${config.nanoEdgeUrl}/deployments/${env.NANO_EDGE_AUTH_TOKEN}.tar.gz`, { method: "PUT" }, (res) => {
-  // TODO: adjust endpoint url
-  // TODO: use token for auth
-  // TODO: print success message with deployed url
-  res.on("data", () => {});
-  if (res.statusCode && res.statusCode >= 200 && res.statusCode < 300) return;
-  else throw new Error("failed to push deployment" + res.statusCode);
-});
+const req = request(
+  `${config.nanoEdgeUrl}/deployments/${env.NANO_EDGE_AUTH_TOKEN}.tar.gz`,
+  { method: "PUT" },
+  (res) => {
+    // TODO: adjust endpoint url
+    // TODO: use token for auth
+    // TODO: print success message with deployed url
+    res.on("data", () => {});
+    if (res.statusCode && res.statusCode >= 200 && res.statusCode < 300) return;
+    else throw new Error("failed to push deployment" + res.statusCode);
+  },
+);
 
 tarball.pipe(req);
