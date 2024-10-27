@@ -6,7 +6,7 @@ export type Config = {
    * The base url of the NanoEdge instance you are deploying to.
    * Defaults to `http://localhost:8080`. // TODO: adjust url
    */
-  nanoEdgeUrl?: string,
+  nanoEdgeUrl?: string;
   /**
    * The directory that contains your built application in format of the build output api.
    * Defaults to `dist`.
