@@ -8,7 +8,7 @@ import { create } from "tar";
 import { z } from "zod";
 import { request } from "node:http";
 
-// TODO: use commander for proper cli tooling
+// TODO: use commander or yargs or ??? for proper cli tooling
 
 const env = z
   .object({
@@ -40,10 +40,10 @@ const tarball = create(
 );
 
 const req = request(
-  `${config.nanoEdgeUrl}/deployments/${env.NANO_EDGE_AUTH_TOKEN}.tar.gz`,
+  `http://localhost:8080/deployments/${env.NANO_EDGE_AUTH_TOKEN}.tar.gz`,
   { method: "PUT" },
   (res) => {
-    // TODO: adjust endpoint url
+    // TODO: extract endpoint base url from NANO_EDGE_AUTH_TOKEN in the future
     // TODO: use token for auth
     // TODO: print success message with deployed url
     res.on("data", () => {});
