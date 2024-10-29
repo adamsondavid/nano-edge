@@ -9,7 +9,7 @@ defaults:
     working-directory: cli
 
 jobs:
-  ci:
+  cicd:
     runs-on: ubuntu-latest
     permissions:
       contents: write
