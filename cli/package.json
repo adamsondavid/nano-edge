@@ -33,7 +33,8 @@
     "dev": "tsup-node --watch",
     "check:format": "prettier --ignore-path ../.gitignore --check .",
     "check:types": "tsc --noEmit",
-    "prepack": "cp ../README.md README.md && tsup-node"
+    "build": "tsup-node",
+    "prepack": "cp ../README.md README.md"
   },
   "dependencies": {
     "jiti": "^2.3.3",
