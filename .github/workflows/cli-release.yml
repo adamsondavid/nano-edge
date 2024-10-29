@@ -22,7 +22,6 @@ jobs:
       - run: npm ci
       - run: npm run check:format
       - run: npm run check:types
-      - run: npm run build
       - run: npx semantic-release -e semantic-release-monorepo
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
