@@ -8,7 +8,7 @@ export function validateEnv(env: unknown) {
   const result = EnvSchema.safeParse(env);
   if (result.error)
     throw {
-      error: "invalid environment variables",
+      error: "invalid environment vars",
       details: result.error.flatten().fieldErrors,
     };
   return result.data;
