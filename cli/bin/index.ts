@@ -1,41 +1,18 @@
 #!/usr/bin/env node
 
 import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
-import { validateConfig } from "../src";
-import { createJiti } from "jiti";
-import { pathToFileURL } from "node:url";
+import { readConfig, validateEnv } from "../src";
 import { create } from "tar";
-import { z } from "zod";
 import { request } from "node:http";
 import { version } from "../package.json";
 
-console.log("running @nano-edge/cli with version", version);
+console.log("running @nano-edge/cli with version", version); // TODO: delete this line
 
 // TODO: use commander or yargs or ??? for proper cli tooling
 
-const env = (() => {
-  const result = z
-    .object({
-      NANO_EDGE_AUTH_TOKEN: z.string(),
-    })
-    .safeParse(process.env);
-  if (result.error)
-    throw {
-      error: "invalid environment variables",
-      details: result.error.flatten().fieldErrors,
-    };
-  return result.data;
-})();
+const env = validateEnv(process.env);
+const config = await readConfig("./nano-edge.config.ts");
 
-async function readConfig() {
-  const configFile = "./nano-edge.config.ts";
-  if (!existsSync(configFile)) return validateConfig({});
-  const jiti = createJiti(pathToFileURL(configFile).toString());
-  const config = await jiti.import(configFile, { default: true });
-  return validateConfig(config);
-}
-
-const config = await readConfig();
 if (config.env) {
   const functionsDirectory = `${config.outputDirectory}/functions`;
   if (!existsSync(functionsDirectory)) mkdirSync(functionsDirectory, { recursive: true });

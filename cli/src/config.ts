@@ -1,5 +1,8 @@
 import { z } from "zod";
 import { assert, Equals } from "tsafe";
+import { existsSync } from "node:fs";
+import { createJiti } from "jiti";
+import { pathToFileURL } from "node:url";
 
 export type Config = {
   /**
@@ -13,6 +16,7 @@ export type Config = {
    */
   env?: Record<string, string>;
 };
+export const defineConfig = (config: Config): Config => config;
 
 const ConfigSchema = z.object({
   outputDirectory: z.string().optional().default("dist"),
@@ -21,9 +25,15 @@ const ConfigSchema = z.object({
 
 assert<Equals<Config, z.input<typeof ConfigSchema>>>(); // ensure that Config and z.input<typeof ConfigSchema> do not drift!
 
-export const defineConfig = (config: Config): Config => config;
-export const validateConfig = (config: unknown) => {
+function validateConfig(config: unknown) {
   const result = ConfigSchema.safeParse(config);
   if (result.error) throw { error: "invalid config", details: result.error.flatten().fieldErrors };
   return result.data;
-};
+}
+
+export async function readConfig(configFilePath: string) {
+  if (!existsSync(configFilePath)) return validateConfig({});
+  const jiti = createJiti(pathToFileURL(configFilePath).toString());
+  const config = await jiti.import(configFilePath, { default: true });
+  return validateConfig(config);
+}
