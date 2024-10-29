@@ -1,6 +1,6 @@
 {
   "name": "@nano-edge/cli",
-  "version": "dev",
+  "version": "0.0.0",
   "type": "module",
   "author": "David Adamson",
   "license": "MIT",
@@ -33,8 +33,7 @@
     "dev": "tsup-node --watch",
     "check:format": "prettier --ignore-path ../.gitignore --check .",
     "check:types": "tsc --noEmit",
-    "build": "tsup-node",
-    "prepack": "cp ../README.md README.md"
+    "prepack": "tsup-node && cp ../README.md README.md"
   },
   "dependencies": {
     "jiti": "^2.3.3",
