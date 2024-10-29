@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import "source-map-support/register.js";
 import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { validateConfig } from "../src";
 import { createJiti } from "jiti";
