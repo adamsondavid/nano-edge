@@ -28,12 +28,12 @@
   },
   "main": "dist/src/index.js",
   "scripts": {
-    "link": "npm link",
+    "dev": "npm link && npm run build -- --watch",
     "unlink": "npm uninstall -g @nano-edge/cli",
-    "dev": "tsup-node --watch",
     "check:format": "prettier --ignore-path ../.gitignore --check .",
     "check:types": "tsc --noEmit",
-    "prepack": "tsup-node && cp ../README.md README.md"
+    "build": "tsup-node",
+    "prepack": "npm run build && cp ../README.md README.md"
   },
   "dependencies": {
     "jiti": "^2.3.3",
