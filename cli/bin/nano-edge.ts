@@ -15,11 +15,16 @@ const cli = yargs(hideBin(process.argv))
   .alias("v", "version")
   .help()
   .alias("h", "help")
+  .epilogue("Note: all options can also be passed via environment variables by prepending the prefix 'NANO_EDGE_' to the MACRO_CASE version of the option name.") // TODO: add config file hint
+  .recommendCommands()
+  .demandCommand()
   .strictCommands();
 
-cli.env("NANO_EDGE");
+cli.wrap(cli.terminalWidth());
+
 // TODO: enable config parsing
 // TODO: const config = await readConfig("./nano-edge.config.ts");
+cli.env("NANO_EDGE");
 
 cli.command({
   command: "deploy",
@@ -30,7 +35,7 @@ cli.command({
       .example("$0 deploy --root=out", "assumes that the built application is in the 'out' directory")
       .example("NANO_EDGE_AUTH_TOKEN=xxx $0 deploy", "provide the auth-token via environment variable")
       .option("auth-token", {
-        describe: "token used to identify and authenticate against the nano-edge instance",
+        describe: "token used to identify and authenticate against the nano-edge instance (recommendation: provide the token via environment variable 'NANO_EDGE_AUTH_TOKEN')",
         type: "string",
         demandOption: true,
         // TODO: create better validator
@@ -80,4 +85,4 @@ cli.command({
   },
 });
 
-await cli.wrap(cli.terminalWidth()).parse();
+await cli.parse();
