@@ -15,7 +15,7 @@ const cli = yargs(hideBin(process.argv))
   .alias("v", "version")
   .help()
   .alias("h", "help")
-  .epilogue("Note: all options can also be passed via environment variables by prepending the prefix 'NANO_EDGE_' to the MACRO_CASE version of the option name.") // TODO: add config file hint
+  .epilogue("Note: all options can also be passed via environment variables by prepending the prefix 'NANO_EDGE_' to the CONSTANT_CASE version of the option name.") // TODO: add config file hint
   .recommendCommands()
   .demandCommand()
   .strictCommands();
