@@ -1,10 +1,12 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --enable-source-maps
 
 import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { readConfig, validateEnv } from "../src";
 import { create } from "tar";
 import { request } from "node:http";
 import { version } from "../package.json";
+
+console.log(process.argv);
 
 console.log("running @nano-edge/cli with version", version); // TODO: delete this line
 

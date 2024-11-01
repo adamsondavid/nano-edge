@@ -24,7 +24,7 @@
     "dist"
   ],
   "bin": {
-    "nano-edge": "dist/bin/index.js"
+    "nano-edge": "dist/bin/nano-edge.js"
   },
   "main": "dist/src/index.js",
   "scripts": {
@@ -32,13 +32,14 @@
     "unlink": "npm uninstall -g @nano-edge/cli",
     "check:format": "prettier --ignore-path ../.gitignore --check .",
     "check:types": "tsc --noEmit",
-    "build": "tsup-node",
+    "build": "tsup-node --format=esm --dts --minify --sourcemap --entry=src/index.ts --entry=bin/nano-edge.ts",
     "prepack": "npm run build && cp ../README.md README.md"
   },
   "dependencies": {
     "jiti": "^2.3.3",
     "tar": "^7.4.3",
     "tsafe": "^1.7.5",
+    "yargs": "^17.7.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {
