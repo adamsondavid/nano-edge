@@ -4,12 +4,13 @@ import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { create } from "tar";
-import { version } from "../package.json";
+import { name, version } from "../package.json";
 import { z } from "zod";
 import { createValidator } from "./utils/validation";
 import { PassThrough } from "node:stream";
 
 const cli = yargs(hideBin(process.argv))
+  .scriptName(`npx ${name}`)
   .version(version)
   .alias("v", "version")
   .help()
