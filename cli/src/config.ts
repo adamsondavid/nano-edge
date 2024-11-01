@@ -4,6 +4,8 @@ import { existsSync } from "node:fs";
 import { createJiti } from "jiti";
 import { pathToFileURL } from "node:url";
 
+// TODO: align config with config parsing from cli
+
 export type Config = {
   /**
    * The directory that contains your built application in format of the build output api.
