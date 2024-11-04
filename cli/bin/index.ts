@@ -6,8 +6,10 @@ import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { create } from "tar";
 import { name, version } from "../package.json";
 import { z } from "zod";
-import { createValidator } from "./utils/validation";
+import { createValidator } from "./validation";
 import { PassThrough } from "node:stream";
+import { loadConfig } from "../src";
+import { merge } from "lodash-es";
 
 const cli = yargs(hideBin(process.argv))
   .scriptName(`npx ${name}`)
@@ -20,12 +22,10 @@ const cli = yargs(hideBin(process.argv))
   ) // TODO: add config file hint
   .recommendCommands()
   .demandCommand()
-  .strictCommands();
+  .strict();
 
 cli.wrap(cli.terminalWidth());
 
-// TODO: enable config parsing
-// TODO: const config = await readConfig("./nano-edge.config.ts");
 cli.env("NANO_EDGE");
 
 cli.command({
@@ -38,28 +38,30 @@ cli.command({
       .example("NANO_EDGE_AUTH_TOKEN=xxx $0 deploy", "provide the auth-token via environment variable")
       .option("auth-token", {
         describe:
-          "token used to identify and authenticate against the nano-edge instance (recommendation: provide the token via environment variable 'NANO_EDGE_AUTH_TOKEN')",
+          "Token used to identify and authenticate against the nano-edge instance. Recommendation: provide the token via environment variable 'NANO_EDGE_AUTH_TOKEN'.",
         type: "string",
         demandOption: true,
         // TODO: create better validator
         coerce: (authToken) => createValidator("auth-token", z.string().min(1)).validate(authToken),
       })
       .option("env", {
-        describe: "an object of environment variables deployed alongside the application",
+        describe: "An object of environment variables deployed alongside the application.",
         coerce: (env) => createValidator("env", z.record(z.string(), z.coerce.string())).validate(env),
       })
       .option("root", {
-        describe: "the root directory containing the pre-built application",
+        describe: "The root directory containing the pre-built application.",
         type: "string",
         default: "dist",
         coerce: (root) =>
           createValidator(
             "root",
-            z.string().refine(existsSync, { message: `directory '${root}' does not exist` }),
+            z.string().refine(existsSync, { message: `Directory '${root}' does not exist` }),
           ).validate(root),
       }),
   // TODO: extract handler code into src/
   async handler(args) {
+      args = merge({}, await loadConfig(args.config), args);
+
     if (args.env) {
       const functionsDirectory = `${args.root}/functions`;
       if (!existsSync(functionsDirectory)) mkdirSync(functionsDirectory, { recursive: true });
