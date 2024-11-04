@@ -10,10 +10,7 @@ export class Deployment {
     this.name = options.name;
     this.basePath = options.basePath;
     this.functions = options.functions;
-    this.env = [...Object.entries(options.env).filter(([key]) => !key.startsWith("FUNCTIONS_")), [
-      "FUNCTIONS_BLOCKED_NETWORKS",
-      Deno.env.get("FUNCTIONS_BLOCKED_NETWORKS"),
-    ]];
+    this.env = Object.entries(options.env);
   }
 
   async fetch(request: Request): Promise<Response> {
