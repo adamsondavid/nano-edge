@@ -6,10 +6,10 @@ import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { create } from "tar";
 import { name, version } from "../package.json";
 import { z } from "zod";
-import { createValidator } from "./validation";
+import { createValidator } from "./utils/option-validation";
 import { PassThrough } from "node:stream";
-import { loadConfig } from "../src";
-import { merge } from "lodash-es";
+import { readFileSync } from "node:fs";
+import { relative } from "node:path";
 
 const cli = yargs(hideBin(process.argv))
   .scriptName(`npx ${name}`)
@@ -18,8 +18,8 @@ const cli = yargs(hideBin(process.argv))
   .help()
   .alias("h", "help")
   .epilogue(
-    "Note: all options can also be passed via environment variables by prepending the prefix 'NANO_EDGE_' to the CONSTANT_CASE version of the option name.",
-  ) // TODO: add config file hint
+    "Note: All options can also be set using environment variables by adding the prefix NANO_EDGE_ to the CONSTANT_CASE version of the option name. Alternatively, options can be defined in a configuration file (default: nano-edge.config.json). You can specify a different config file using the --config option.",
+  )
   .recommendCommands()
   .demandCommand()
   .strict();
@@ -27,6 +27,18 @@ const cli = yargs(hideBin(process.argv))
 cli.wrap(cli.terminalWidth());
 
 cli.env("NANO_EDGE");
+
+cli
+  .config("config", "Path to JSON config file", (configPath) => {
+    const config = readFileSync(configPath, "utf-8");
+    try {
+      return JSON.parse(config);
+    } catch (e: any) {
+      throw new Error(`Failed to parse config ${relative(".", configPath)}: ${e.toString()}`);
+    }
+  })
+  .default("config", existsSync("nano-edge.config.json") ? "nano-edge.config.json" : undefined)
+  .alias("c", "config");
 
 cli.command({
   command: "deploy",
@@ -60,8 +72,6 @@ cli.command({
       }),
   // TODO: extract handler code into src/
   async handler(args) {
-      args = merge({}, await loadConfig(args.config), args);
-
     if (args.env) {
       const functionsDirectory = `${args.root}/functions`;
       if (!existsSync(functionsDirectory)) mkdirSync(functionsDirectory, { recursive: true });
