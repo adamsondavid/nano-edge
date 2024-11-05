@@ -10,7 +10,9 @@
     "NanoEdge",
     "serverless",
     "selfhosted",
-    "jamstack"
+    "functions",
+    "faas",
+    "edge-functions"
   ],
   "homepage": "https://github.com/adamsondavid/nano-edge#readme",
   "bugs": {
