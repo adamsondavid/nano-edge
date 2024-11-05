@@ -1,22 +1,25 @@
 # NanoEdge
 
-General Note: do not deploy secrets that are really secret! these secrets might be exploitable!
+Disclaimer: do not deploy secrets that are really secret! these secrets might be exploitable!
 
 All you need to do to deploy your app is to run the following command:
 ```sh
 npx @nano-edge/cli deploy
 ```
-Do not forget to set the `NANO_EDGE_AUTH_TOKEN` env var, which is required by the cli.\
-To customize deploy settings, create a file called `nano-edge.config.ts`:
-```typescript
-import { defineConfig } from "@nano-edge/cli";
 
-export default defineConfig({
-  env: {
-    SOME_ENV_VAR: "SOME_VALUE",
-    SOME_OTHER_ENV_VAR: process.env.SOME_OTHER_ENV_VAR,
-  },
-});
+Advanced usage:
+
+Do not forget to set the `NANO_EDGE_AUTH_TOKEN` env var, which is required by the cli.
+```sh
+export NANO_EDGE_AUTH_TOKEN=xxx npx @nano-edge/cli deploy --env.MY_SECRET=$SOME_SECRET
+```
+To customize cli options, you can create a file `nano-edge.config.json`:
+```json
+{
+  "env": {
+    "SOME_ENV_VAR": "SOME_VALUE"
+  }
+}
 ```
 
 ## Build output API example:
