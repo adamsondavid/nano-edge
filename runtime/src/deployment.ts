@@ -1,5 +1,4 @@
 import {serveDir, serveFile} from "std/http";
-import {crypto} from "std/crypto";
 import {logger} from "./logger.ts";
 import qs from "qs";
 
@@ -24,23 +23,21 @@ export class Deployment {
       const start = performance.now();
       // deno-lint-ignore ban-ts-comment
       // @ts-ignore
-      const fn = await EdgeRuntime.userWorkers.create({
+      const fn = await EdgeRuntime.userWorkers.create({ // TODO: wrap in try catch
         servicePath: `${this.basePath}/functions/${functionName}`,
         memoryLimitMb: 128,
         workerTimeoutMs: 15_000,
         remoteModules: false,
         envVars: this.env,
       });
-      const response = await fn.fetch(request);
+      const response = await fn.fetch(request); // TODO: wrap in try catch
       const duration = performance.now() - start;
-      response.headers ??= new Headers();
-      response.headers.set("x-nano-edge-id", fn.key);
       logger.log({
         labels: { deployment: this.name },
         level: response.ok ? "info" : "error",
         message: "",
         type: "FUNCTION",
-        requestId: response.headers.get("x-nano-edge-id"),
+        requestId: request.headers.get("x-nano-edge-id"),
         function: functionName,
         method: request.method,
         host: url.host,
@@ -55,13 +52,12 @@ export class Deployment {
     let response = await serveDir(request, { fsRoot: `${this.basePath}/static` });
     if (url.pathname === "/index.html" || response.status === 404) url.pathname = "/";
     if (response.status === 404) response = await serveFile(request, `${this.basePath}/static/index.html`);
-    response.headers.set("x-nano-edge-id", crypto.randomUUID());
     logger.log({
       labels: { deployment: this.name },
       level: response.ok ? "info" : "error",
       message: "",
       type: "STATIC",
-      requestId: response.headers.get("x-nano-edge-id"),
+      requestId: request.headers.get("x-nano-edge-id"),
       method: request.method,
       host: url.host,
       path: url.pathname,

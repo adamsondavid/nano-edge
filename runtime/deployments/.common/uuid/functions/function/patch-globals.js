@@ -5,7 +5,6 @@ delete globalThis.Deno;
 globalThis.Deno = { serve: deno.serve, listen: deno.listen };
 
 const { SB_EXECUTION_ID, ...env} = deno.env.toObject();
-env.NANO_EDGE_ID = SB_EXECUTION_ID;
 globalThis.process = { env: Object.freeze(env) };
 
 async function resolveDns(hostname, recordType) {
