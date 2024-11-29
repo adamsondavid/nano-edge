@@ -7,6 +7,6 @@ Deno.serve(async (request: Request) => {
     return await deployment.fetch(request);
   } catch (e) {
     console.error(e);
-    return new Response("internal server error", { status: 500 });
+    return new Response("this is most likely a nano-edge bug", { status: 500 });
   }
 });

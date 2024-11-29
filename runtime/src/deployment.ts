@@ -21,6 +21,7 @@ export class Deployment {
 
     const functionName = url.pathname.split("/")[1];
     if (this.functions.has(functionName)) {
+      const start = performance.now();
       // deno-lint-ignore ban-ts-comment
       // @ts-ignore
       const fn = await EdgeRuntime.userWorkers.create({
@@ -31,6 +32,7 @@ export class Deployment {
         envVars: this.env,
       });
       const response = await fn.fetch(request);
+      const duration = performance.now() - start;
       response.headers ??= new Headers();
       response.headers.set("x-nano-edge-id", fn.key);
       logger.log({
@@ -44,7 +46,8 @@ export class Deployment {
         host: url.host,
         path: url.pathname,
         params: qs.parse(url.search.substring(1)),
-        status: response.status
+        status: response.status,
+        duration: duration,
       });
       return response;
     }
