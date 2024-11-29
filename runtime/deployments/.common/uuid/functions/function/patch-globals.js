@@ -1,4 +1,4 @@
-import ipaddr from "npm:ipaddr.js@2.2.0";
+import {parse} from "../../../../.common/uuid/functions/function/ipaddr.js";
 
 const deno = globalThis.Deno;
 delete globalThis.Deno;
@@ -22,7 +22,7 @@ globalThis.fetch = async (input, init) => {
 
   const ips = await Promise.all([await resolveDns(url.hostname, "A"), await resolveDns(url.hostname, "AAAA")]);
   for (const ip of ips.flat())
-    if (ipaddr.parse(ip).range() !== "unicast") throw new Error(`network access not allowed`);
+    if (parse(ip).range() !== "unicast") throw new Error(`network access not allowed`);
 
   return _fetch(input, init);
 };
