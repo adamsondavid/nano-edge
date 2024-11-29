@@ -20,6 +20,17 @@ services:
       - "traefik.http.routers.runtime.rule=HostRegexp(`.+\\.apps\\.localhost`)"
     depends_on:
       - "storage"
+  loki:
+    image: "grafana/loki:3.3.0"
+    restart: "always"
+    volumes:
+      - "loki:/loki"
+    ports:
+      - "3100:3100" # TODO: remove port exposure later
+  grafana: # TODO: delete service as not needed
+    image: "grafana/grafana:master"
+    ports:
+      - "3000:3000"
   ingress:
     image: "traefik:v3.0"
     restart: "always"
@@ -33,5 +44,6 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
 
-#volumes:
+volumes:
   # storage:
+  loki:

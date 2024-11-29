@@ -1,9 +1,9 @@
-import { crypto } from "std/crypto";
-import { dirname, parse } from "std/path";
-import { UntarStream } from "std/tar";
-import { ensureDir } from "std/fs";
-import { toJson } from "std/streams";
-import { Deployment } from "./deployment.ts";
+import {crypto} from "std/crypto";
+import {dirname, parse} from "std/path";
+import {UntarStream} from "std/tar";
+import {ensureDir} from "std/fs";
+import {toJson} from "std/streams";
+import {Deployment} from "./deployment.ts";
 
 async function createFile(path: string) {
   await ensureDir(dirname(path));
@@ -12,7 +12,7 @@ async function createFile(path: string) {
 
 export async function download(deployment: string) {
   const res = await fetch(`http://storage/deployments/${deployment}.tar.gz`);
-  if (!res.ok || !res.body) throw new Error(`failed to download deployment: ${deployment}`);
+  if (!res.ok || !res.body) throw new Error(`failed to download deployment (status ${res.status}): ${deployment}`);
   const basePath = `deployments/${deployment}/${crypto.randomUUID()}`;
   const functions = new Set<string>();
   let env = {};

@@ -1,10 +1,9 @@
-import { download } from "./download.ts";
+import {download} from "./download.ts";
 
 Deno.serve(async (request: Request) => {
-  // TODO: const deployment = deployments.get(new URL(request.url).hostname.split(".")[0]);
-  // TODO: if (!deployment) return new Response("not found", { status: 404 });
   try {
-    const deployment = await download("tapw"); // TODO: cache downloaded deployment
+    const deploymentName = new URL(request.url).hostname.split(".")[0];
+    const deployment = await download(deploymentName); // TODO: cache downloaded deployment
     return await deployment.fetch(request);
   } catch (e) {
     console.error(e);

@@ -1,4 +1,7 @@
-import { serveDir, serveFile } from "std/http";
+import {serveDir, serveFile} from "std/http";
+import {crypto} from "std/crypto";
+import {logger} from "./logger.ts";
+import qs from "qs";
 
 export class Deployment {
   public readonly name;
@@ -27,11 +30,40 @@ export class Deployment {
         remoteModules: false,
         envVars: this.env,
       });
-      return fn.fetch(request);
+      const response = await fn.fetch(request);
+      response.headers ??= new Headers();
+      response.headers.set("x-nano-edge-id", fn.key);
+      logger.log({
+        labels: { deployment: this.name },
+        level: response.ok ? "info" : "error",
+        message: "",
+        type: "FUNCTION",
+        requestId: response.headers.get("x-nano-edge-id"),
+        function: functionName,
+        method: request.method,
+        host: url.host,
+        path: url.pathname,
+        params: qs.parse(url.search.substring(1)),
+        status: response.status
+      });
+      return response;
     }
 
-    const response = await serveDir(request, { fsRoot: `${this.basePath}/static` });
-    if (response.status === 404) return serveFile(request, `${this.basePath}/static/index.html`);
+    let response = await serveDir(request, { fsRoot: `${this.basePath}/static` });
+    if (url.pathname === "/index.html" || response.status === 404) url.pathname = "/";
+    if (response.status === 404) response = await serveFile(request, `${this.basePath}/static/index.html`);
+    response.headers.set("x-nano-edge-id", crypto.randomUUID());
+    logger.log({
+      labels: { deployment: this.name },
+      level: response.ok ? "info" : "error",
+      message: "",
+      type: "STATIC",
+      requestId: response.headers.get("x-nano-edge-id"),
+      method: request.method,
+      host: url.host,
+      path: url.pathname,
+      status: response.status
+    });
     return response;
   }
 }
