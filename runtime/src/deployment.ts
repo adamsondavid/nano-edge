@@ -29,8 +29,21 @@ export class Deployment {
         workerTimeoutMs: 15_000,
         remoteModules: false,
         envVars: this.env,
+      // deno-lint-ignore no-explicit-any
+      }).catch((e: any) => {
+        if (e.stack.startsWith("InvalidWorkerCreation")) {
+          logger.log({
+            labels: {deployment: this.name},
+            level: "error",
+            message: e.stack.replace("InvalidWorkerCreation: worker boot error:", "FunctionBootError:"),
+            type: "FUNCTION_LOG",
+            requestId: request.headers.get("x-nano-edge-id"),
+          });
+          return undefined;
+        }
+        return e;
       });
-      const response = await fn.fetch(request);
+      const response = await fn?.fetch(request) ?? new Response("internal server error", { status: 500 });
       const duration = performance.now() - start;
       logger.log({
         labels: { deployment: this.name },
@@ -38,7 +51,7 @@ export class Deployment {
         message: "",
         type: "FUNCTION",
         requestId: request.headers.get("x-nano-edge-id"),
-        functionId: fn.key,
+        functionId: fn?.key,
         function: functionName,
         method: request.method,
         host: url.host,
