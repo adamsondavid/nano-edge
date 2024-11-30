@@ -30,7 +30,7 @@ export class Deployment {
         remoteModules: false,
         envVars: this.env,
       });
-      const response = await fn.fetch(request); // TODO: wrap in try catch
+      const response = await fn.fetch(request);
       const duration = performance.now() - start;
       logger.log({
         labels: { deployment: this.name },
@@ -38,6 +38,7 @@ export class Deployment {
         message: "",
         type: "FUNCTION",
         requestId: request.headers.get("x-nano-edge-id"),
+        functionId: fn.key,
         function: functionName,
         method: request.method,
         host: url.host,
