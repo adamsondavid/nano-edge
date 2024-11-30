@@ -12,7 +12,8 @@ for await (const data of eventManager) {
       type: "FUNCTION_LOG",
       functionId: data.metadata.execution_id,
       level: data.event.level.toLowerCase(),
-      message: data.event.msg.substring(0, data.event.msg.length - 1),
+      // deno-lint-ignore no-control-regex
+      message: data.event.msg.substring(0, data.event.msg.length - 1).replace(/\u001b\[\d+m/g, ""),
     });
   }
 }
