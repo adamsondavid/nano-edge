@@ -6,7 +6,6 @@ const eventManager = new EventManager();
 
 for await (const data of eventManager) {
   if (data && data.event_type === "Log") {
-    console.log(data.event.level);
     logger.log({
       labels: { deployment: data.metadata.service_path.split("/")[1] },
       type: "FUNCTION_LOG",
