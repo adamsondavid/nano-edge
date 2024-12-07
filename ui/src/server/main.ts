@@ -4,13 +4,9 @@ import { contract } from "../common/contract";
 import { fetchRequestHandler } from "@ts-rest/serverless/fetch";
 
 export function initApi(unvalidatedEnv: unknown) {
-  const env = z
-    .object({
-      GREETING: z.string().optional(),
-    })
-    .parse(unvalidatedEnv);
+  const env = z.object({}).parse(unvalidatedEnv);
 
-  const router = initRouter(env.GREETING);
+  const router = initRouter();
 
   return (request: Request) =>
     fetchRequestHandler({
