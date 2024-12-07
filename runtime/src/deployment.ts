@@ -47,7 +47,7 @@ export class Deployment {
       const duration = performance.now() - start;
       logger.log({
         labels: { deployment: this.name },
-        level: response.ok ? "info" : "error",
+        level: response.status >= 400 ? "error" : "info",
         message: "",
         type: "INBOUND_FUNCTION_REQUEST",
         requestId: request.headers.get("x-nano-edge-id"),
@@ -68,7 +68,7 @@ export class Deployment {
     if (response.status === 404) response = await serveFile(request, `${this.basePath}/static/index.html`);
     logger.log({
       labels: { deployment: this.name },
-      level: response.ok ? "info" : "error",
+      level: response.status >= 400 ? "error" : "info",
       message: "",
       type: "INBOUND_STATIC_REQUEST",
       requestId: request.headers.get("x-nano-edge-id"),
