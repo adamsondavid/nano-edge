@@ -17,5 +17,8 @@ watchEffect(async () => {
 
 <template>
   <h1>Logs for {{ route.params.deployment }}:</h1>
+  <div v-for="log of logs">
+    {{ log }}
+  </div>
   <pre class="font-mono">{{ JSON.stringify(logs, null, 2) }}</pre>
 </template>
