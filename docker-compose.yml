@@ -27,10 +27,6 @@ services:
       - "loki:/loki"
     ports:
       - "3100:3100" # TODO: remove port exposure later
-  grafana: # TODO: delete service as not needed
-    image: "grafana/grafana:master"
-    ports:
-      - "3000:3000"
   ingress:
     image: "traefik:v3.0"
     restart: "always"
