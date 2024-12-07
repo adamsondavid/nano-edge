@@ -5,7 +5,7 @@ export function initRouter() {
   return tsr.router(contract, {
     async getLogs({ params }) {
       const res = await fetch(
-        `http://localhost:3100/loki/api/v1/query_range?limit=250&query={deployment="${params.deployment}"}`, // TODO: change loki host
+        `http://loki:3100/loki/api/v1/query_range?limit=250&query={deployment="${params.deployment}"}`,
       );
       if (!res.ok) throw new Error(`failed to load logs (status ${res.status})`);
       const json = await res.json(); // TODO validate schema using zod, get rid of any's

@@ -25,12 +25,12 @@ services:
     restart: "always"
     volumes:
       - "loki:/loki"
-    ports:
-      - "3100:3100" # TODO: remove port exposure later
   ui:
     build:
       context: "ui"
     restart: "always"
+    depends_on:
+      - "loki"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.ui.rule=Host(`app.localhost`)"
