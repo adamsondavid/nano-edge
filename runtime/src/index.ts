@@ -1,5 +1,7 @@
 import {download} from "./download.ts";
 
+const deployments = new Map([["tapw", await download("tapw")]]);
+
 Deno.serve(async (request: Request) => {
   const oldRequest = request;
   request = new Request(request, { headers: { ...Object.fromEntries(request.headers.entries()), "x-nano-edge-id": crypto.randomUUID() }});
@@ -9,7 +11,7 @@ Deno.serve(async (request: Request) => {
 
   const deploymentName = new URL(request.url).hostname.split(".")[0];
   try {
-    const deployment = await download(deploymentName); // TODO: cache downloaded deployment
+    const deployment = deployments.get(deploymentName) ?? await download(deploymentName); // TODO: improve cache. remember that there might be race conditions
     const response = await deployment.fetch(request);
     // deno-lint-ignore no-explicit-any
     (response as any).headers ??= new Headers();
