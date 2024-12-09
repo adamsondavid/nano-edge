@@ -17,7 +17,7 @@ const log = (type, level, ...args) =>
       level,
       requestId: context.getStore(),
       sequence: sequence++,
-      message: args.map((obj) => (typeof obj === "object" ? JSON.stringify(obj, null, 2) : obj)).join(" "),
+      message: args.map((obj) => (obj instanceof Error ? obj.stack : typeof obj === "object" ? JSON.stringify(obj, null, 2) : obj)).join(" "),
     }),
   );
 
