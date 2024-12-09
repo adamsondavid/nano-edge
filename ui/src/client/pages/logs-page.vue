@@ -26,7 +26,7 @@ watchEffect(async () => {
       <td>{{ log.type }}</td>
       <td>{{ log.method }}</td>
       <td>{{ log.path }}</td>
-      <td v-if="log.logs">{{ log.logs.at(-1)?.message.substring(0, 32) }} ({{ log.logs.length }})</td>
+      <td v-if="log.logs" class="font-mono">{{ log.logs.at(-1)?.message.substring(0, 32) }} ({{ log.logs.length }})</td>
       <td v-else></td>
       <td v-if="log.duration !== undefined">{{ log.duration }}ms</td>
     </tr>
@@ -37,7 +37,7 @@ watchEffect(async () => {
       <tr v-for="(log, i) in l.logs" :key="i">
         <td>{{ log.level }}</td>
         <td>{{ log.timestamp }}</td>
-        <td>{{ log.message }}</td>
+        <td class="font-mono whitespace-pre">{{ log.message }}</td>
       </tr>
     </table>
   </div>

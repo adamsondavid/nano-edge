@@ -8,11 +8,7 @@ for await (const data of eventManager) {
   if (data && data.event_type === "Log") {
     logger.log({
       labels: { deployment: data.metadata.service_path.split("/")[1] },
-      type: "FUNCTION_LOG",
-      functionId: data.metadata.execution_id,
-      level: data.event.level.toLowerCase(),
-      // deno-lint-ignore no-control-regex
-      message: data.event.msg.substring(0, data.event.msg.length - 1).replace(/\u001b\[\d+m/g, ""),
+      ...JSON.parse(data.event.msg),
     });
   }
 }
