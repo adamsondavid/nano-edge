@@ -26,3 +26,19 @@ globalThis.fetch = async (input, init) => {
 
   return _fetch(input, init);
 };
+
+// TODO: logging the nano edge id!!
+/*const log = console.log;
+globalThis.console.log = (...args) => {
+  log("hello", ...args);
+}
+
+console.dir({}, {depth: Infinity});
+console.log("log");
+console.info("info");
+console.count("count");
+console.error("error");
+console.warn("warn");
+console.assert(true, "assert true")
+console.assert(false, "assert false")
+console.debug("debug");*/

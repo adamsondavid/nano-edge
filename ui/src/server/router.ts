@@ -26,12 +26,11 @@ export function initRouter() {
       for (const log of requests) {
         if (log.type !== "INBOUND_FUNCTION_REQUEST") continue;
         if (log.requestId) functions.set(log.requestId, log);
-        if (log.functionId) functions.set(log.functionId, log);
       }
 
       for (const log of logs) {
         if (log.type !== "FUNCTION_LOG") continue;
-        const fn = functions.get(log.functionId ?? log.requestId);
+        const fn = functions.get(log.requestId);
         if (!fn) {
           console.error("failed to correlate log. parent not found.");
           continue;

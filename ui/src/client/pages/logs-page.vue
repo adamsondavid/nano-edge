@@ -28,7 +28,7 @@ watchEffect(async () => {
       <td>{{ log.path }}</td>
       <td v-if="log.logs">{{ log.logs.at(-1)?.message.substring(0, 32) }} ({{ log.logs.length }})</td>
       <td v-else></td>
-      <td v-if="log.duration">{{ log.duration }}ms</td>
+      <td v-if="log.duration !== undefined">{{ log.duration }}ms</td>
     </tr>
   </table>
   <div v-if="l" class="py-12">

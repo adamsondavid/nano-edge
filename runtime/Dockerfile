@@ -1,4 +1,4 @@
-FROM supabase/edge-runtime:v1.65.0
+FROM supabase/edge-runtime:v1.65.4
 WORKDIR /app
 COPY . .
 RUN edge-runtime bundle --import-map deno.json --entrypoint src/index.ts && rm bin.eszip

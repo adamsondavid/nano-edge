@@ -16,6 +16,7 @@ export class Deployment {
   }
 
   async fetch(request: Request): Promise<Response> {
+    const nanoEdgeId = request.headers.get("x-nano-edge-id");
     const url = new URL(request.url);
 
     const functionName = url.pathname.split("/")[1];
@@ -23,7 +24,7 @@ export class Deployment {
       const start = performance.now();
       // deno-lint-ignore ban-ts-comment
       // @ts-ignore
-      const fn = await EdgeRuntime.userWorkers.create({ // TODO: wrap in try catch
+      const fn = await EdgeRuntime.userWorkers.create({
         servicePath: `${this.basePath}/functions/${functionName}`,
         memoryLimitMb: 128,
         workerTimeoutMs: 15_000,
@@ -37,11 +38,11 @@ export class Deployment {
             level: "error",
             message: e.stack.replace("InvalidWorkerCreation: worker boot error:", "FunctionBootError:"),
             type: "FUNCTION_LOG",
-            requestId: request.headers.get("x-nano-edge-id"),
+            requestId: nanoEdgeId,
           });
           return undefined;
         }
-        return e;
+        throw e;
       });
       const response = await fn?.fetch(request) ?? new Response("internal server error", { status: 500 });
       const duration = performance.now() - start;
@@ -50,8 +51,7 @@ export class Deployment {
         level: response.status >= 400 ? "error" : "info",
         message: "",
         type: "INBOUND_FUNCTION_REQUEST",
-        requestId: request.headers.get("x-nano-edge-id"),
-        functionId: fn?.key,
+        requestId: nanoEdgeId,
         function: functionName,
         method: request.method,
         host: url.host,
@@ -71,7 +71,7 @@ export class Deployment {
       level: response.status >= 400 ? "error" : "info",
       message: "",
       type: "INBOUND_STATIC_REQUEST",
-      requestId: request.headers.get("x-nano-edge-id"),
+      requestId: nanoEdgeId,
       method: request.method,
       host: url.host,
       path: url.pathname,
