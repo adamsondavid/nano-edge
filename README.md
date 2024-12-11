@@ -1,7 +1,5 @@
 # NanoEdge
 
-Disclaimer: do not deploy secrets that are really secret! these secrets might be exploitable!
-
 All you need to do to deploy your app is to run the following command:
 ```sh
 npx @nano-edge/cli deploy
@@ -21,6 +19,9 @@ To customize cli options, you can create a file `nano-edge.config.json`:
   }
 }
 ```
+
+> [IMPORTANT!]
+> Do not deploy secrets that are really secret! These secrets might be exploitable as nano-edge is currently not (yet?) hardened!
 
 ## Build output API example:
 
