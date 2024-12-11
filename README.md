@@ -20,7 +20,7 @@ To customize cli options, you can create a file `nano-edge.config.json`:
 }
 ```
 
-> [IMPORTANT!]
+> [!IMPORTANT]
 > Do not deploy secrets that are really secret! These secrets might be exploitable as nano-edge is currently not (yet?) hardened!
 
 ## Build output API example:
