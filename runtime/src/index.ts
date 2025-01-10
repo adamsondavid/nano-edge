@@ -1,6 +1,11 @@
 import {DeploymentManager} from "./deployment-manager.ts";
+import {connectAsync} from "mqtt"
 
 const deploymentManager = new DeploymentManager();
+
+const mqtt = await connectAsync("mqtt://mqtt:1883");
+await mqtt.subscribeAsync("invalidate-deployment");
+mqtt.on("message", (_topic, deploymentName) => deploymentManager.delete(deploymentName.toString()));
 
 Deno.serve(async (request: Request) => {
   const nanoEdgeId = crypto.randomUUID();
