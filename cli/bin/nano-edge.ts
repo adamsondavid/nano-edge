@@ -101,6 +101,7 @@ cli.command({
     // TODO: move this to the deploy-server
     const mqtt = await connectAsync("mqtt://localhost:1883");
     await mqtt.publishAsync("invalidate-deployment", args.authToken, { qos: 2 });
+    await mqtt.endAsync();
   },
 });
 
