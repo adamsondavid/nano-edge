@@ -3,7 +3,6 @@ import {download} from "./download.ts";
 import {Lock} from "async-await-mutex-lock";
 import {LRUCache} from "lru-cache"
 
-
 export class DeploymentManager {
   private readonly lock = new Lock<string>();
   private readonly deployments = new LRUCache<string, Deployment>({
