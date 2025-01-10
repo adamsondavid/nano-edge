@@ -8,6 +8,12 @@ services:
       - "./storage-data:/deployments" # TODO: make a proper volume not only a bind mount
     ports: # TODO: do not expose the storage to the public, instead only access this container indirectly through the deploy-server
       - "8080:80"
+  mqtt:
+    build:
+      context: "mqtt"
+    restart: "always"
+    ports: # TODO: do not expose the mqtt to the public, instead only access this container indirectly through the deploy-server
+      - "1883:1883"
   runtime:
     build:
       context: "runtime"
@@ -20,6 +26,8 @@ services:
       - "traefik.http.routers.runtime.rule=HostRegexp(`.+\\.apps\\.localhost`)"
     depends_on:
       - "storage"
+      - "loki"
+      - "mqtt"
   loki:
     image: "grafana/loki:3.3.0"
     restart: "always"
