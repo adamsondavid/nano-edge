@@ -1,5 +1,7 @@
 {
   "imports": {
+    "async-await-mutex-lock": "npm:async-await-mutex-lock@^1.0.12",
+    "lru-cache": "npm:lru-cache@^11.0.2",
     "qs": "npm:qs@^6.13.1",
     "std/crypto": "jsr:@std/crypto@^1.0.3",
     "std/fs": "jsr:@std/fs@^1.0.4",

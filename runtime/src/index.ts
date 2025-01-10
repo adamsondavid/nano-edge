@@ -1,6 +1,6 @@
-import {download} from "./download.ts";
+import {DeploymentManager} from "./deployment-manager.ts";
 
-const deployments = new Map([["tapw", await download("tapw")]]);
+const deploymentManager = new DeploymentManager();
 
 Deno.serve(async (request: Request) => {
   const nanoEdgeId = crypto.randomUUID();
@@ -12,7 +12,7 @@ Deno.serve(async (request: Request) => {
 
   const deploymentName = new URL(request.url).hostname.split(".")[0];
   try {
-    const deployment = deployments.get(deploymentName) ?? await download(deploymentName); // TODO: improve cache. remember that there might be race conditions
+    const deployment = await deploymentManager.get(deploymentName);
     const response = await deployment.fetch(request);
     // deno-lint-ignore no-explicit-any
     (response as any).headers ??= new Headers();
