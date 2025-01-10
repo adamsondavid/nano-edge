@@ -2,14 +2,14 @@
 
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
-import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { create } from "tar";
 import { name, version } from "../package.json";
 import { z } from "zod";
 import { createValidator } from "./utils/option-validation";
 import { PassThrough } from "node:stream";
-import { readFileSync } from "node:fs";
 import { relative } from "node:path";
+import { connectAsync } from "mqtt";
 
 const cli = yargs(hideBin(process.argv))
   .scriptName(`npx ${name}`)
@@ -97,6 +97,10 @@ cli.command({
     });
     if (!res.ok) throw new Error(`failed to deploy: ${res.status}`);
     else console.log(await res.text());
+
+    // TODO: move this to the deploy-server
+    const mqtt = await connectAsync("mqtt://localhost:1883");
+    await mqtt.publishAsync("invalidate-deployment", args.authToken, { qos: 2 });
   },
 });
 
