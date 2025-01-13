@@ -69,6 +69,13 @@
 }
 
 @layer base {
+  :root {
+    --font-family-sans: "Inter Variable";
+    --font-family-mono: "JetBrains Mono Variable";
+  }
+}
+
+@layer base {
   * {
     @apply border-border;
   }
