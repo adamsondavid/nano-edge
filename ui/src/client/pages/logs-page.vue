@@ -18,6 +18,7 @@ watchEffect(async () => {
 
 <template>
   <h1>Logs for {{ route.params.deployment }}:</h1>
+  <button v-for="(log, i) of logs" :key="i" class="rounded-sm bg-gray-500">{{ log.level }}</button>
   <table class="w-full table-auto">
     <tr v-for="(log, i) of logs" :key="i" @click="l = log" class="cursor-pointer">
       <td>{{ log.level }}</td>

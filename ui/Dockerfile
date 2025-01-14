@@ -5,7 +5,7 @@ WORKDIR /build
 COPY package*.json .npmrc ./
 RUN npm ci --prefer-offline --no-audit
 COPY . .
-RUN npm run build && npm prune --production
+RUN npm run build
 
 FROM base
 WORKDIR /app

@@ -44,3 +44,10 @@ A function can access env vars by using process.env.\
 - Edge-case (precedence): If a static file exists with same name as a function, the static file is
   not served.
   Instead, the function is executed.
+
+## Local development
+
+Just run the following compose:
+```sh
+docker compose -f compose.yml -f compose.dev.yml up --build --watch --remove-orphans
+```

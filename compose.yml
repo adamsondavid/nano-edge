@@ -56,5 +56,4 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
 
 volumes:
-  # storage:
   loki:
