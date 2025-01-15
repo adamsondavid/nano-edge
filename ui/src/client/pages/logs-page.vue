@@ -29,7 +29,7 @@ const variants = cva(
   {
     variants: {
       logLevel: {
-        info: "even:bg-gray-100 hover:bg-gray-200",
+        info: "bg-gray-50 hover:bg-gray-100",
         warn: "bg-yellow-50 hover:bg-yellow-100 text-yellow-700",
         error: "bg-red-50 hover:bg-red-100 text-red-700",
       },
@@ -93,20 +93,23 @@ function mapStatusCodeColor(status: number) {
         <span v-if="request.duration !== undefined" class="ml-auto">{{ request.duration }}ms</span>
       </accordion-trigger>
       <!-- TODO: extract component?? -->
-      <accordion-content v-if="request.logs" class="overflow-hidden content">
-        <div class="ml-12 mb-12 relative">
-          <div class="absolute w-[3px] top-0 bottom-4 left-[-33px] bg-gray-100" />
-          <div v-for="(log, i) of request.logs" :key="i" :class="cn(variants({ logLevel: log.level }), 'relative')">
-            <div
-              class="absolute w-[11px] h-[11px] top-2 bottom-4 left-[-37px] bg-gray-200 rounded-full border-[1px] border-white"
-            />
-            <div>
-              <span class="opacity-60">{{ formatDate(new Date(log.timestamp)) }}</span>
-              <span>{{ formatTime(new Date(log.timestamp)) }}</span>
-              <span class="opacity-60">{{ formatMilliseconds(new Date(log.timestamp)) }}</span>
+      <accordion-content class="overflow-hidden content">
+        <div class="ml-12">
+          <div v-if="request.logs" class="relative">
+            <div class="absolute w-[3px] top-0 bottom-4 left-[-33px] bg-gray-100" />
+            <div v-for="(log, i) of request.logs" :key="i" :class="cn(variants({ logLevel: log.level }), 'relative')">
+              <div
+                class="absolute w-[11px] h-[11px] top-2 bottom-4 left-[-37px] bg-gray-200 rounded-full border-[1px] border-white"
+              />
+              <div>
+                <span class="opacity-60">{{ formatDate(new Date(log.timestamp)) }}</span>
+                <span>{{ formatTime(new Date(log.timestamp)) }}</span>
+                <span class="opacity-60">{{ formatMilliseconds(new Date(log.timestamp)) }}</span>
+              </div>
+              <span class="whitespace-pre"> {{ log.message }}</span>
             </div>
-            <span class="whitespace-pre"> {{ log.message }}</span>
           </div>
+          <div class="text-xs opacity-60 pl-2 pt-2 pb-6">no more log entries to show</div>
         </div>
       </accordion-content>
     </accordion-item>
