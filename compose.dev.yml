@@ -1,4 +1,15 @@
 services:
+  runtime:
+    develop:
+      watch:
+        - action: "sync"
+          path: "./runtime"
+          target: "/app"
+        - action: "sync+restart"
+          path: "./runtime/deployments/.common/uuid/functions/function/index.js"
+          target: "/app/runtime/deployments/.common/uuid/functions/function/index.js"
+        - action: "rebuild"
+          path: "./runtime/deno.json"
   ui:
     entrypoint: "npm run dev -- --host --port 3000"
     develop:
