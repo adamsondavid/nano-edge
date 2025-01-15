@@ -28,12 +28,28 @@ const variants = cva(
   "w-full rounded-sm mb-0.5 min-h-7 max-h-fit font-mono text-sm text-nowrap flex py-1 gap-8 text-left select-text px-2",
   {
     variants: {
+      type: {
+        request: "",
+        log: "",
+      },
       logLevel: {
-        info: "bg-gray-50 hover:bg-gray-100",
+        info: "",
         warn: "bg-yellow-50 hover:bg-yellow-100 text-yellow-700",
         error: "bg-red-50 hover:bg-red-100 text-red-700",
       },
     },
+    compoundVariants: [
+      {
+        logLevel: "info",
+        type: "request",
+        class: "[&:nth-of-type(2n)]:bg-gray-100 hover:!bg-gray-200",
+      },
+      {
+        logLevel: "info",
+        type: "log",
+        class: "hover:bg-gray-50",
+      },
+    ],
   },
 );
 
@@ -65,7 +81,7 @@ function mapStatusCodeColor(status: number) {
   <accordion-root v-model="selectedRequestId" type="single" collapsible class="p-2">
     <accordion-item v-for="request in requests" :key="request.requestId" :value="request.requestId" as-child>
       <!-- TODO: extract component -->
-      <accordion-trigger :class="variants({ logLevel: getMostSignificantLogLevel(request) })">
+      <accordion-trigger :class="variants({ type: 'request', logLevel: getMostSignificantLogLevel(request) })">
         <span>
           <Icon v-if="getMostSignificantLogLevel(request) === 'info'" :icon="info" width="16" />
           <Icon v-if="getMostSignificantLogLevel(request) === 'warn'" :icon="alertTriangle" width="16" />
@@ -97,7 +113,11 @@ function mapStatusCodeColor(status: number) {
         <div class="ml-12">
           <div v-if="request.logs" class="relative">
             <div class="absolute w-[3px] top-0 bottom-4 left-[-33px] bg-gray-100" />
-            <div v-for="(log, i) of request.logs" :key="i" :class="cn(variants({ logLevel: log.level }), 'relative')">
+            <div
+              v-for="(log, i) of request.logs"
+              :key="i"
+              :class="cn(variants({ type: 'log', logLevel: log.level }), 'relative')"
+            >
               <div
                 class="absolute w-[11px] h-[11px] top-2 bottom-4 left-[-37px] bg-gray-200 rounded-full border-[1px] border-white"
               />
@@ -109,7 +129,10 @@ function mapStatusCodeColor(status: number) {
               <span class="whitespace-pre"> {{ log.message }}</span>
             </div>
           </div>
-          <div class="text-xs opacity-60 pl-2 pt-2 pb-6">no more log entries to show</div>
+          <div class="text-xs opacity-60 pl-2 pt-2 pb-6">
+            <span v-if="request.logs?.length">no more log entries to show</span>
+            <span v-else>no log entries to show</span>
+          </div>
         </div>
       </accordion-content>
     </accordion-item>
