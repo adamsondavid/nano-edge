@@ -51,3 +51,7 @@ Just run the following compose:
 ```sh
 docker compose -f compose.yml -f compose.dev.yml up --build --watch --remove-orphans
 ```
+This spins up the entire development environment and deploys an example app.\
+The source code is located at [cli/test/example-app](cli/test/example-app).\
+It is deployed to http://example.apps.localhost.\
+File changes in the source code of the example app are watched and deployed automatically.
