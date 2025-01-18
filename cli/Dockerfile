@@ -1,7 +1,7 @@
-FROM node:22
+FROM node:22-alpine
 WORKDIR /app
 COPY package*.json .npmrc ./
 RUN npm ci --prefer-offline --no-audit
 COPY . .
 RUN npm run build
-ENTRYPOINT ["/bin/sh", "-c" , "npm run dev & npx onchange -i test/example-app/** -- npx @nano-edge/cli deploy --root test/example-app --auth-token example"]
+ENTRYPOINT ["/bin/sh", "-c" , "npm run dev & SHELL=/bin/sh npx chokidar-cli --initial test/example-app/** -c \"npx @nano-edge/cli deploy --root test/example-app --auth-token example\" & wait"]

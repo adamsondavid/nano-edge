@@ -54,4 +54,5 @@ docker compose -f compose.yml -f compose.dev.yml up --build --watch --remove-orp
 This spins up the entire development environment and deploys an example app.\
 The source code is located at [cli/test/example-app](cli/test/example-app).\
 It is deployed to http://example.apps.localhost.\
+Logs for the example app are here http://app.localhost/deployments/example/logs \
 File changes in the source code of the example app are watched and deployed automatically.
