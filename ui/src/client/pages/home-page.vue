@@ -5,5 +5,5 @@ import { RouterLink } from "vue-router";
 
 <template>
   <h1>nano edge</h1>
-  <Button :as="RouterLink" to="/deployments/tapw/logs">click here to see logs of tapw</Button>
+  <Button :as="RouterLink" to="/deployments/example/logs">click here to see logs of the example app</Button>
 </template>

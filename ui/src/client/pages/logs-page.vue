@@ -53,6 +53,8 @@ const variants = cva(
   },
 );
 
+// TODO: turn functions into computed properties once. Performance with calling these functions (multiple times) on every rerender is a performance issue!
+
 function getMostSignificantLogLevel(log: any) {
   const logLevels = [log.level, ...(log.logs?.map((l: any) => l.level) ?? [])];
   if (logLevels.includes("error")) return "error";
