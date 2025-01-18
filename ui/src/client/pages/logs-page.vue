@@ -82,7 +82,7 @@ function mapStatusCodeColor(status: number) {
     <accordion-item v-for="request in requests" :key="request.requestId" :value="request.requestId" as-child>
       <!-- TODO: extract component -->
       <accordion-trigger :class="variants({ type: 'request', logLevel: getMostSignificantLogLevel(request) })">
-        <span>
+        <span :title="getMostSignificantLogLevel(request).toUpperCase()">
           <Icon v-if="getMostSignificantLogLevel(request) === 'info'" :icon="info" width="16" />
           <Icon v-if="getMostSignificantLogLevel(request) === 'warn'" :icon="alertTriangle" width="16" />
           <Icon v-else-if="getMostSignificantLogLevel(request) === 'error'" :icon="alertTriangle" width="16" />
@@ -96,8 +96,12 @@ function mapStatusCodeColor(status: number) {
         <span :class="mapStatusCodeColor(request.status)">{{ request.status }}</span>
         <span class="flex items-center gap-2">
           <span class="opacity-60">
-            <Icon v-if="request.type === 'INBOUND_FUNCTION_REQUEST'" :icon="functionSquare" width="16" />
-            <Icon v-else-if="request.type === 'INBOUND_STATIC_REQUEST'" :icon="database" width="16" />
+            <span v-if="request.type === 'INBOUND_FUNCTION_REQUEST'" title="Edge Function Request">
+              <Icon :icon="functionSquare" width="16" />
+            </span>
+            <span v-else-if="request.type === 'INBOUND_STATIC_REQUEST'" title="Static File Request">
+              <Icon :icon="database" width="16" />
+            </span>
           </span>
           <span class="min-w-[25em] max-w-[25em] truncate">
             <span class="opacity-60">{{ request.method + " " }}</span>
@@ -105,7 +109,9 @@ function mapStatusCodeColor(status: number) {
           </span>
         </span>
         <span v-if="request.logs" class="truncate">{{ request.logs.at(-1)?.message }}</span>
-        <span v-if="request.logs?.length" class="opacity-60">({{ request.logs.length - 1 }} more)</span>
+        <span v-if="request.logs && request.logs.length > 1" class="opacity-60">
+          ({{ request.logs.length - 1 }} more)
+        </span>
         <span v-if="request.duration !== undefined" class="ml-auto">{{ request.duration }}ms</span>
       </accordion-trigger>
       <!-- TODO: extract component?? -->
@@ -126,7 +132,7 @@ function mapStatusCodeColor(status: number) {
                 <span>{{ formatTime(new Date(log.timestamp)) }}</span>
                 <span class="opacity-60">{{ formatMilliseconds(new Date(log.timestamp)) }}</span>
               </div>
-              <span class="whitespace-pre"> {{ log.message }}</span>
+              <span class="whitespace-pre">{{ log.message }}</span>
             </div>
           </div>
           <div class="text-xs opacity-60 pl-2 pt-2 pb-6">
