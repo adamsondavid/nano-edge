@@ -80,7 +80,15 @@ cli.command({
       writeFileSync(`${functionsDirectory}/env.json`, JSON.stringify(args.env));
     }
 
-    const tarball = createTar({ gzip: true, cwd: args.root }, readdirSync(args.root));
+    const tarball = createTar(
+      {
+        gzip: true,
+        cwd: args.root,
+        follow: true,
+        portable: true,
+      },
+      readdirSync(args.root),
+    );
 
     // TODO: extract endpoint base url from NANO_EDGE_AUTH_TOKEN in the future
     // TODO: use token for auth and not directly in the url path
