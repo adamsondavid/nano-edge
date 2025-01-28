@@ -9,7 +9,7 @@ import { z } from "zod";
 import { createValidator } from "./utils/option-validation";
 import { relative } from "node:path";
 import { connectAsync } from "mqtt";
-import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { S3Client } from "@aws-sdk/client-s3";
 import { PassThrough } from "node:stream";
 import { Upload } from "@aws-sdk/lib-storage";
 
@@ -102,14 +102,6 @@ cli.command({
         Body: tarball.pipe(new PassThrough()),
       },
     }).done();
-
-    const res = await s3Client.send(
-      new GetObjectCommand({
-        Bucket: "deployments",
-        Key: `${args.authToken}.tar.gz`,
-      }),
-    );
-    const k = res.Body?.transformToWebStream();
 
     // TODO: move this to the deploy-server
     const mqtt = await connectAsync("mqtt://localhost:1883");
