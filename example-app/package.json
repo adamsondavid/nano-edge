@@ -1,6 +1,9 @@
 {
+  "name": "@nano-edge/example-app",
   "private": true,
-  "name": "example-app",
+  "version": "0.0.0",
+  "author": "David Adamson",
+  "type": "module",
   "scripts": {
     "deploy": "tsx ../cli/bin/nano-edge.ts deploy --auth-token example"
   },
