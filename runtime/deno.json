@@ -11,7 +11,8 @@
     "std/streams": "jsr:@std/streams@^1.0.7",
     "std/tar": "jsr:@std/tar@^0.1.2",
     "winston": "npm:winston@^3.17.0",
-    "winston-loki": "npm:winston-loki@^6.1.3"
+    "winston-loki": "npm:winston-loki@^6.1.3",
+    "s3": "npm:@aws-sdk/client-s3@^3.735.0"
   },
   "fmt": {
     "lineWidth": 120

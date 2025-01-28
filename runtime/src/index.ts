@@ -1,5 +1,5 @@
-import {DeploymentManager} from "./deployment-manager.ts";
-import {connectAsync} from "mqtt"
+import { DeploymentManager } from "./deployment-manager.ts";
+import { connectAsync } from "mqtt";
 
 const deploymentManager = new DeploymentManager();
 

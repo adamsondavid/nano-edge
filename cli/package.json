@@ -30,14 +30,14 @@
   },
   "main": "dist/src/index.js",
   "scripts": {
-    "dev": "npm link && npm run build -- --watch",
-    "unlink": "npm uninstall -g @nano-edge/cli",
     "check:format": "prettier --ignore-path ../.gitignore --check .",
     "check:types": "tsc --noEmit",
     "build": "tsup-node --format=esm --dts --minify --sourcemap --entry=src/index.ts --entry=bin/*.ts",
     "prepack": "npm run build && cp ../README.md README.md"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.735.0",
+    "@aws-sdk/lib-storage": "^3.735.0",
     "mqtt": "^5.10.3",
     "tar": "^7.4.3",
     "yargs": "^17.7.2",

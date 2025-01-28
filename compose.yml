@@ -1,13 +1,17 @@
 version: "3.8"
 services:
   storage:
-    build:
-      context: "storage"
+    image: "minio/minio:latest"
+    entrypoint: "sh"
+    command: "-c 'mkdir -p /data/deployments && /usr/bin/minio server /data'"
     restart: "always"
     volumes:
-      - "./storage-data:/deployments" # TODO: make a proper volume not only a bind mount
+      - "storage:/data"
+    environment:
+      - "MINIO_ROOT_USER=admin"
+      - "MINIO_ROOT_PASSWORD=adminadmin"
     ports: # TODO: do not expose the storage to the public, instead only access this container indirectly through the deploy-server
-      - "8080:80"
+      - "9000:9000"
   mqtt:
     build:
       context: "mqtt"
@@ -43,7 +47,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.ui.rule=Host(`app.localhost`)"
   ingress:
-    image: "traefik:v3.0"
+    image: "traefik:v3"
     restart: "always"
     command:
       - "--providers.docker"
@@ -56,4 +60,5 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
 
 volumes:
+  storage:
   loki:

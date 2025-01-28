@@ -3,13 +3,15 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
-import { create } from "tar";
+import { create as createTar } from "tar";
 import { name, version } from "../package.json";
 import { z } from "zod";
 import { createValidator } from "./utils/option-validation";
-import { PassThrough } from "node:stream";
 import { relative } from "node:path";
 import { connectAsync } from "mqtt";
+import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { PassThrough } from "node:stream";
+import { Upload } from "@aws-sdk/lib-storage";
 
 const cli = yargs(hideBin(process.argv))
   .scriptName(`npx ${name}`)
@@ -78,25 +80,36 @@ cli.command({
       writeFileSync(`${functionsDirectory}/env.json`, JSON.stringify(args.env));
     }
 
-    const tarball = create(
-      {
-        gzip: true,
-        cwd: args.root,
-      },
-      readdirSync(args.root),
-    ).pipe(new PassThrough());
+    const tarball = createTar({ gzip: true, cwd: args.root }, readdirSync(args.root));
 
     // TODO: extract endpoint base url from NANO_EDGE_AUTH_TOKEN in the future
     // TODO: use token for auth and not directly in the url path
     // TODO: connect to deploy server not storage server!
-    const res = await fetch(`http://localhost:8080/deployments/${args.authToken}.tar.gz`, {
-      method: "PUT",
-      // @ts-ignore
-      body: tarball,
-      duplex: "half",
+    const s3Client = new S3Client({
+      forcePathStyle: true,
+      endpoint: "http://localhost:9000",
+      region: "auto",
+      credentials: {
+        accessKeyId: "admin",
+        secretAccessKey: "adminadmin",
+      },
     });
-    if (!res.ok) throw new Error(`failed to deploy: ${res.status}`);
-    else console.log(await res.text());
+    await new Upload({
+      client: s3Client,
+      params: {
+        Bucket: "deployments",
+        Key: `${args.authToken}.tar.gz`,
+        Body: tarball.pipe(new PassThrough()),
+      },
+    }).done();
+
+    const res = await s3Client.send(
+      new GetObjectCommand({
+        Bucket: "deployments",
+        Key: `${args.authToken}.tar.gz`,
+      }),
+    );
+    const k = res.Body?.transformToWebStream();
 
     // TODO: move this to the deploy-server
     const mqtt = await connectAsync("mqtt://localhost:1883");

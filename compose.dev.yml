@@ -2,12 +2,9 @@ services:
   runtime:
     develop:
       watch:
-        - action: "sync"
+        - action: "sync+restart"
           path: "./runtime"
           target: "/app"
-        - action: "sync+restart"
-          path: "./runtime/deployments/.common/uuid/functions/function/index.js"
-          target: "/app/runtime/deployments/.common/uuid/functions/function/index.js"
         - action: "rebuild"
           path: "./runtime/deno.json"
   ui:
@@ -27,24 +24,3 @@ services:
           target: "/app/package.json"
         - action: "rebuild"
           path: "./ui/package-lock.json"
-  cli:
-    build:
-      context: "cli"
-    restart: "always"
-    network_mode: "host"
-    depends_on:
-      - "runtime"
-      - "storage" # TODO: make dependent on deploy server
-      - "mqtt"  # TODO: make dependent on deploy server
-    develop:
-      watch:
-        - action: "sync"
-          path: "./cli"
-          target: "/app"
-          ignore:
-            - "node_modules/"
-        - action: "sync+restart"
-          path: "./cli/package.json"
-          target: "/app/package.json"
-        - action: "rebuild"
-          path: "./cli/package-lock.json"

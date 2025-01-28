@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "name": "example-app",
+  "scripts": {
+    "deploy": "tsx ../cli/bin/nano-edge.ts deploy --auth-token example"
+  },
+  "dependencies": {
+    "tsx": "^4.19.2"
+  }
+}

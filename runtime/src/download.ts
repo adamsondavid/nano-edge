@@ -1,9 +1,20 @@
-import {crypto} from "std/crypto";
-import {dirname, parse} from "std/path";
-import {UntarStream} from "std/tar";
-import {ensureDir} from "std/fs";
-import {toJson} from "std/streams";
-import {Deployment} from "./deployment.ts";
+import { crypto } from "std/crypto";
+import { dirname, parse } from "std/path";
+import { UntarStream } from "std/tar";
+import { ensureDir } from "std/fs";
+import { toJson } from "std/streams";
+import { Deployment } from "./deployment.ts";
+import { GetObjectCommand, S3Client } from "s3";
+
+const s3Client = new S3Client({
+  forcePathStyle: true,
+  endpoint: "http://storage:9000",
+  region: "auto",
+  credentials: {
+    accessKeyId: "admin",
+    secretAccessKey: "adminadmin",
+  },
+});
 
 async function createFile(path: string) {
   await ensureDir(dirname(path));
@@ -11,13 +22,17 @@ async function createFile(path: string) {
 }
 
 export async function download(deployment: string) {
-  const res = await fetch(`http://storage/deployments/${deployment}.tar.gz`);
-  if (!res.ok || !res.body) throw new Error(`failed to download deployment (status ${res.status}): ${deployment}`);
+  const body = (await s3Client.send(
+    new GetObjectCommand({
+      Bucket: "deployments",
+      Key: `${deployment}.tar.gz`,
+    }),
+  )).Body!.transformToWebStream();
   const basePath = `deployments/${deployment}/${crypto.randomUUID()}`;
   const functions = new Set<string>();
   let env = {};
   for await (
-    const entry of res.body
+    const entry of body
       .pipeThrough(new DecompressionStream("gzip"))
       .pipeThrough(new UntarStream())
   ) {
