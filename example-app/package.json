@@ -5,6 +5,7 @@
   "author": "David Adamson",
   "type": "module",
   "scripts": {
+    "postinstall": "cd ../cli && npm install",
     "deploy": "tsx ../cli/bin/nano-edge.ts deploy --auth-token example"
   },
   "dependencies": {
