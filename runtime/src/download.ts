@@ -3,8 +3,10 @@ import { dirname, parse } from "std/path";
 import { UntarStream } from "std/tar";
 import { ensureDir } from "std/fs";
 import { toJson } from "std/streams";
-import { Deployment } from "./deployment.ts";
 import { GetObjectCommand, S3Client } from "s3";
+import { RegularDeployment } from "./regular-deployment.ts";
+import { NoSuchKey } from "npm:@aws-sdk/client-s3@3.735.0";
+import { notFoundDeployment } from "./not-found-deployment.ts";
 
 const s3Client = new S3Client({
   forcePathStyle: true,
@@ -21,13 +23,14 @@ async function createFile(path: string) {
   return Deno.create(path);
 }
 
-export async function download(deployment: string) {
+async function downloadAndUnpack(deployment: string) {
   const body = (await s3Client.send(
     new GetObjectCommand({
       Bucket: "deployments",
       Key: `${deployment}.tar.gz`,
     }),
   )).Body!.transformToWebStream();
+
   const basePath = `deployments/${deployment}/${crypto.randomUUID()}`;
   const functions = new Set<string>();
   let env = {};
@@ -57,5 +60,14 @@ export async function download(deployment: string) {
     }
   }
 
-  return new Deployment({ name: deployment, basePath, functions, env });
+  return new RegularDeployment({ name: deployment, basePath, functions, env });
+}
+
+export async function download(deployment: string) {
+  try {
+    return await downloadAndUnpack(deployment);
+  } catch(e) {
+    if (e instanceof NoSuchKey) return notFoundDeployment;
+    else throw e;
+  }
 }

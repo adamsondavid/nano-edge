@@ -1,7 +1,7 @@
-import {Deployment} from "./deployment.ts";
-import {download} from "./download.ts";
-import {Lock} from "async-await-mutex-lock";
-import {LRUCache} from "lru-cache"
+import { Deployment } from "./deployment.ts";
+import { download } from "./download.ts";
+import { Lock } from "async-await-mutex-lock";
+import { LRUCache } from "lru-cache";
 
 export class DeploymentManager {
   private readonly lock = new Lock<string>();
@@ -25,7 +25,9 @@ export class DeploymentManager {
     }
   }
 
-  delete(deploymentName: string) {
-   this.deployments.delete(deploymentName);
+  async delete(deploymentName: string) {
+    await this.lock.acquire(deploymentName);
+    this.deployments.delete(deploymentName);
+    this.lock.release(deploymentName);
   }
 }

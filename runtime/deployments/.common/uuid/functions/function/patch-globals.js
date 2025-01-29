@@ -1,5 +1,7 @@
-import {parse} from "../../../../.common/uuid/functions/function/ipaddr.js";
-import {context} from "../../../../.common/uuid/functions/function/context.js";
+import { parse } from "../../../../.common/uuid/functions/function/ipaddr.js";
+import {
+  context,
+} from "../../../../.common/uuid/functions/function/context.js";
 
 const deno = globalThis.Deno;
 delete globalThis.Deno;
@@ -36,7 +38,7 @@ globalThis.fetch = async (input, init) => {
 
   const ips = await Promise.all([await resolveDns(url.hostname, "A"), await resolveDns(url.hostname, "AAAA")]);
   for (const ip of ips.flat())
-    if (parse(ip).range() !== "unicast") throw new Error(`network access not allowed`);
+    if (parse(ip).range() !== "unicast") throw new Error(`Network access to hostname "${url.hostname}" is not allowed.`);
 
   // TODO: instrument. log outbound requests and correlate them
   return _fetch(input, init);

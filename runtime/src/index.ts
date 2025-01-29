@@ -25,7 +25,6 @@ Deno.serve(async (request: Request) => {
     return response;
   } catch (e) {
     console.error(e);
-    // TODO: adjust response when downloading a deployment returns 404. e.g. when deploymentName does not exist.
-    return new Response("this is most likely a nano-edge bug", { status: 500, headers: { "x-nano-edge-id": nanoEdgeId } });
+    return new Response("UnknownError. This is most likely a nano-edge bug. Please consider raising an issue under https://github.com/adamsondavid/nano-edge/issues.", { status: 500, headers: { "x-nano-edge-id": nanoEdgeId } });
   }
 });
