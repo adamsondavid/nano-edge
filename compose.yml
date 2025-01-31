@@ -10,19 +10,15 @@ services:
     environment:
       - "MINIO_ROOT_USER=admin"
       - "MINIO_ROOT_PASSWORD=adminadmin"
-    ports: # TODO: do not expose the storage to the public, instead only access this container indirectly through the deploy-server
-      - "9000:9000"
   mqtt:
     build:
       context: "mqtt"
     restart: "always"
-    ports: # TODO: do not expose the mqtt to the public, instead only access this container indirectly through the deploy-server
-      - "1883:1883"
   api:
     build:
       context: "api"
     restart: "always"
-    ports: # TODO: remove later once we have a domain
+    ports: # TODO: remove later once we have a domain that is reachable via nodejs fetch (the cli can currently unfortunately not resolve http://api.localhost)
       - "3000:3000"
     depends_on:
       - "storage"

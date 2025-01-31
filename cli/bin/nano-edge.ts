@@ -8,10 +8,7 @@ import { name, version } from "../package.json";
 import { z } from "zod";
 import { createValidator } from "./utils/option-validation";
 import { relative } from "node:path";
-import { connectAsync } from "mqtt";
-import { S3Client } from "@aws-sdk/client-s3";
-import { PassThrough } from "node:stream";
-import { Upload } from "@aws-sdk/lib-storage";
+import { useApi } from "../src/api";
 
 const cli = yargs(hideBin(process.argv))
   .scriptName(`npx ${name}`)
@@ -90,31 +87,20 @@ cli.command({
       readdirSync(args.root),
     );
 
-    // TODO: extract endpoint base url from NANO_EDGE_AUTH_TOKEN in the future
-    // TODO: use token for auth and not directly in the url path
-    // TODO: connect to deploy server not storage server!
-    const s3Client = new S3Client({
-      forcePathStyle: true,
-      endpoint: "http://localhost:9000",
-      region: "auto",
-      credentials: {
-        accessKeyId: "admin",
-        secretAccessKey: "adminadmin",
-      },
-    });
-    await new Upload({
-      client: s3Client,
-      params: {
-        Bucket: "deployments",
-        Key: `${args.authToken}.tar.gz`,
-        Body: tarball.pipe(new PassThrough()),
-      },
-    }).done();
+    // TODO: extract base url from auth token in the future
+    const api = useApi("http://localhost:3000");
 
-    // TODO: move this to the deploy-server
-    const mqtt = await connectAsync("mqtt://localhost:1883");
-    await mqtt.publishAsync("invalidate-deployment", args.authToken, { qos: 2 });
-    await mqtt.endAsync();
+    // TODO: pass auth token to the server in the future
+    const res = await api.putDeployment({
+      headers: { "content-type": "application/gzip" },
+      params: { deployment: args.authToken }, // TODO: extract deployment name from auth token in the future
+      bodyOverride: tarball,
+      // @ts-expect-error TODO: remove ts-comment later once ts fixed fetch options types
+      fetchOptions: { duplex: "half" },
+    });
+
+    if (res.status !== 200) throw new Error(`failed to deploy (status ${res.status}): ${res.body}`);
+    else console.log(res.body);
   },
 });
 

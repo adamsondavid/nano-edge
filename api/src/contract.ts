@@ -16,7 +16,7 @@ export const contract = initContract().router(
       }),
       body: z.any(),
       responses: {
-        200: z.any(),
+        200: z.string(),
       },
     },
   },

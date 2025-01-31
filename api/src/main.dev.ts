@@ -8,7 +8,7 @@ import { serve } from "@hono/node-server";
 
 const app = new Hono();
 
-app.mount("/api", initApi(process.env), {
+app.mount("/api", await initApi(process.env), {
   replaceRequest: (req) => new Request(new URL(req.url), req),
 });
 

@@ -8,19 +8,12 @@ services:
           target: "/app"
           ignore:
             - "node_modules/"
-        - action: "sync+restart"
-          path: "./api/package.json"
-          target: "/app/package.json"
-        - action: "rebuild"
-          path: "./api/package-lock.json"
   runtime:
     develop:
       watch:
         - action: "sync+restart"
           path: "./runtime"
           target: "/app"
-        - action: "rebuild"
-          path: "./runtime/deno.json"
   ui:
     entrypoint: "npm run dev -- --host --port 3000"
     develop:
@@ -30,11 +23,3 @@ services:
           target: "/app"
           ignore:
             - "node_modules/"
-        - action: "sync+restart"
-          path: "./ui/vite.config.ts"
-          target: "/app/vite.config.ts"
-        - action: "sync+restart"
-          path: "./ui/package.json"
-          target: "/app/package.json"
-        - action: "rebuild"
-          path: "./ui/package-lock.json"
