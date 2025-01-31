@@ -19,6 +19,6 @@ api.putDeployment({
   headers: { "content-type": "application/gzip" },
   params: { deployment: "abc" },
   bodyOverride: new Blob(["hello"]).stream(),
-  // @ts-ignore
+  // @ts-expect-error TODO: remove ts-comment later once ts fixed fetch options types
   fetchOptions: { duplex: "half" },
 });
