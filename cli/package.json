@@ -38,10 +38,11 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.735.0",
     "@aws-sdk/lib-storage": "^3.735.0",
+    "@ts-rest/core": "^3.51.0",
     "mqtt": "^5.10.3",
     "tar": "^7.4.3",
     "yargs": "^17.7.2",
-    "zod": "^3.23.8"
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@types/node": "^20.17.0",

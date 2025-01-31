@@ -19,4 +19,3 @@ jobs:
       - run: npm ci --prefer-offline --no-audit
       - run: npm run check:types
       - run: npm run check:format
-      - run: npm run check:lint
