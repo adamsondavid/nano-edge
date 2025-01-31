@@ -30,7 +30,6 @@
   },
   "main": "dist/src/index.js",
   "scripts": {
-    "postinstall": "cd ../api && npm install",
     "check:format": "prettier --ignore-path ../.gitignore --check .",
     "check:types": "tsc --noEmit",
     "build": "tsup-node --format=esm --dts --minify --entry=src/index.ts --entry=bin/*.ts",
