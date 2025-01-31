@@ -1,4 +1,18 @@
 services:
+  api:
+    entrypoint: "npm run dev"
+    develop:
+      watch:
+        - action: "sync"
+          path: "./api"
+          target: "/app"
+          ignore:
+            - "node_modules/"
+        - action: "sync+restart"
+          path: "./api/package.json"
+          target: "/app/package.json"
+        - action: "rebuild"
+          path: "./api/package-lock.json"
   runtime:
     develop:
       watch:
@@ -20,7 +34,7 @@ services:
           path: "./ui/vite.config.ts"
           target: "/app/vite.config.ts"
         - action: "sync+restart"
-          path: "./cli/package.json"
+          path: "./ui/package.json"
           target: "/app/package.json"
         - action: "rebuild"
           path: "./ui/package-lock.json"

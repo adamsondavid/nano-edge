@@ -18,6 +18,18 @@ services:
     restart: "always"
     ports: # TODO: do not expose the mqtt to the public, instead only access this container indirectly through the deploy-server
       - "1883:1883"
+  api:
+    build:
+      context: "api"
+    restart: "always"
+    ports: # TODO: remove later once we have a domain
+      - "3000:3000"
+    depends_on:
+      - "storage"
+      - "mqtt"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`api.localhost`)"
   runtime:
     build:
       context: "runtime"
