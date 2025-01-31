@@ -51,12 +51,15 @@ If this is the first time you cloned this repository, make sure to run `npm inst
 Only then continue with the following steps:
 
 Just run the following two scripts to start the stack and deploy an example app:
+
 ```sh
 docker compose -f compose.yml -f compose.dev.yml up --build --watch --remove-orphans
 ```
+
 ```sh
-cd example-app && npm install && npm run deploy
+cd example-app && npm run deploy
 ```
+
 This spins up the entire development environment and deploys an example app. \
 It is deployed to http://example.apps.localhost. \
 Logs for the example app are here http://app.localhost/deployments/example/logs. \
