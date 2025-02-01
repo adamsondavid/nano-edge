@@ -42,12 +42,12 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@types/node": "^20.17.0",
+    "@types/node": "^22.13.0",
     "@types/yargs": "^17.0.33",
-    "prettier": "^3.3.3",
-    "semantic-release": "^24.2.0",
+    "prettier": "^3.4.2",
+    "semantic-release": "^24.2.1",
     "semantic-release-monorepo": "^8.0.2",
-    "tsup": "^8.3.5",
-    "typescript": "~5.6.3"
+    "tsup": "^8.3.6",
+    "typescript": "~5.7.3"
   }
 }
