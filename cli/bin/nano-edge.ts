@@ -99,8 +99,8 @@ cli.command({
       fetchOptions: { duplex: "half" },
     });
 
-    if (res.status !== 200) throw new Error(`failed to deploy (status ${res.status}): ${res.body}`);
-    else console.log(res.body);
+    if (res.status === 200) console.log(res.body);
+    else throw new Error(res.body);
   },
 });
 
