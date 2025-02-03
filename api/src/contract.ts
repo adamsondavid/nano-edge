@@ -11,9 +11,6 @@ export const contract = initContract().router(
       pathParams: z.object({
         deployment: Deployment,
       }),
-      headers: z.object({
-        "content-type": z.literal("application/gzip"),
-      }),
       body: z.any(),
       responses: {
         200: z.string(),
@@ -22,3 +19,6 @@ export const contract = initContract().router(
   },
   { strictStatusCodes: true },
 );
+
+// @ts-ignore
+contract.putDeployment.contentType = "application/gzip";

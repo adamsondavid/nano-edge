@@ -88,15 +88,12 @@ cli.command({
     );
 
     // TODO: extract base url from auth token in the future
-    const api = useApi("http://localhost:3000");
+    const api = useApi("http://api.localhost");
 
     // TODO: pass auth token to the server in the future
     const res = await api.putDeployment({
-      headers: { "content-type": "application/gzip" },
       params: { deployment: args.authToken }, // TODO: extract deployment name from auth token in the future
-      bodyOverride: tarball,
-      // @ts-expect-error TODO: remove ts-comment later once ts fixed fetch options types
-      fetchOptions: { duplex: "half" },
+      body: tarball,
     });
 
     if (res.status === 200) console.log(res.body);
