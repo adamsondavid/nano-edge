@@ -51,7 +51,8 @@ services:
       - "loki"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ui.rule=Host(`app.localhost`)"
+      - "traefik.http.routers.ui.rule=Host(`ui.apps.localhost`)"
+      - "traefik.http.routers.ui.priority=999" # need to set priority as subdomain overlaps with runtime subdomain
   ingress:
     image: "traefik:v3"
     restart: "always"

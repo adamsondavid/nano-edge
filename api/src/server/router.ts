@@ -6,7 +6,8 @@ import { MqttClient } from "mqtt";
 
 export function initRouter(s3Client: S3Client, mqttClient: MqttClient) {
   return tsr.router(contract, {
-    async putDeployment({ params }, { request }) {
+    // TODO: validate signature of headers.authorization.raw
+    async putDeployment({ params, headers }, { request }) {
       await new Upload({
         client: s3Client,
         params: {
@@ -20,7 +21,12 @@ export function initRouter(s3Client: S3Client, mqttClient: MqttClient) {
 
       return {
         status: 200,
-        body: `Publishing the deployment was successful: http://${params.deployment}.apps.localhost.`,
+        body: [
+          "Publishing the deployment was successful! 🚀",
+          // TODO: is it really a good idea to infer ui and deployment urls based on api base url?
+          `Deployment:    ${headers.authorization.payload.iss.replace("api", `${params.deployment}.apps`)}`,
+          `Log-Dashboard: ${headers.authorization.payload.iss.replace("api", "ui.apps")}/deployments/${params.deployment}/logs`,
+        ].join("\n"),
       };
     },
   });

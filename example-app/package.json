@@ -5,7 +5,7 @@
   "author": "David Adamson",
   "type": "module",
   "scripts": {
-    "deploy": "tsx ../cli/bin/nano-edge.ts deploy --auth-token example"
+    "deploy": "tsx ../cli/bin/nano-edge.ts deploy --auth-token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vYXBpLmxvY2FsaG9zdCIsImRlcGxveW1lbnQiOiJleGFtcGxlIn0.A1XXxceQv86Z_2yPXHuQE_pbbn2wSM6GJ8eiLDve0O0"
   },
   "dependencies": {
     "tsx": "^4.19.2"

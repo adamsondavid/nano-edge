@@ -9,6 +9,7 @@ import { z } from "zod";
 import { createValidator } from "./utils/option-validation";
 import { relative } from "node:path";
 import { useApi } from "../src/api";
+import { JWT } from "../../api/src/contract";
 
 const cli = yargs(hideBin(process.argv))
   .scriptName(`npx ${name}`)
@@ -52,8 +53,7 @@ cli.command({
           "Token used to identify and authenticate against the nano-edge instance. Recommendation: provide the token via environment variable 'NANO_EDGE_AUTH_TOKEN'.",
         type: "string",
         demandOption: true,
-        // TODO: create better validator
-        coerce: (authToken) => createValidator("auth-token", z.string().min(1)).validate(authToken),
+        coerce: (authToken) => createValidator("auth-token", JWT).validate(authToken),
       })
       .option("env", {
         describe: "An object of environment variables deployed alongside the application.",
@@ -87,14 +87,8 @@ cli.command({
       readdirSync(args.root),
     );
 
-    // TODO: extract base url from auth token in the future
-    const api = useApi("http://api.localhost");
-
-    // TODO: pass auth token to the server in the future
-    const res = await api.putDeployment({
-      params: { deployment: args.authToken }, // TODO: extract deployment name from auth token in the future
-      body: tarball,
-    });
+    const api = useApi(args.authToken.raw);
+    const res = await api.putDeployment(tarball);
 
     if (res.status === 200) console.log(res.body);
     else throw new Error(res.body);

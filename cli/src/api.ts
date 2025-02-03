@@ -1,10 +1,12 @@
 import { ApiFetcherArgs, initClient, tsRestFetchApi } from "@ts-rest/core";
-import { contract } from "../../api/src/contract";
+import { contract, JWT } from "../../api/src/contract";
 
-export function useApi(baseUrl: string) {
-  return initClient(contract, {
-    baseUrl: `${baseUrl}/api`,
-    baseHeaders: {},
+export function useApi(_jwt: string) {
+  const jwt = JWT.parse(_jwt);
+
+  const api = initClient(contract, {
+    baseUrl: `${jwt.payload.iss}/api`,
+    baseHeaders: { authorization: jwt.raw },
     throwOnUnknownStatus: true,
     jsonQuery: true,
     validateResponse: true,
@@ -22,4 +24,10 @@ export function useApi(baseUrl: string) {
       return tsRestFetchApi(args);
     },
   });
+
+  return {
+    putDeployment(tarball: any) {
+      return api.putDeployment({ params: { deployment: jwt.payload.deployment }, body: tarball });
+    },
+  };
 }

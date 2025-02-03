@@ -1,7 +1,19 @@
 import { initContract } from "@ts-rest/core";
 import { z } from "zod";
+import { jwtDecode } from "jwt-decode";
 
-const Deployment = z.string().regex(/^[a-z]{1,12}$/);
+export const Deployment = z.string().regex(/^[a-z]{1,12}$/);
+
+export const JWT = z
+  .string()
+  .jwt()
+  .transform((jwt) => ({ raw: jwt, payload: jwtDecode(jwt) }))
+  .pipe(
+    z.object({
+      raw: z.string().jwt(),
+      payload: z.object({ iss: z.string(), deployment: Deployment }),
+    }),
+  );
 
 export const contract = initContract().router(
   {
@@ -17,7 +29,10 @@ export const contract = initContract().router(
       },
     },
   },
-  { strictStatusCodes: true },
+  {
+    baseHeaders: z.object({ authorization: JWT }),
+    strictStatusCodes: true,
+  },
 );
 
 // @ts-ignore
