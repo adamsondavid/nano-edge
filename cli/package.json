@@ -36,17 +36,17 @@
     "prepack": "npm run build && cp ../README.md README.md"
   },
   "dependencies": {
-    "@ts-rest/core": "^3.51.0",
+    "@ts-rest/core": "^3.52.0",
     "jwt-decode": "^4.0.0",
     "tar": "^7.4.3",
     "yargs": "^17.7.2",
-    "zod": "^3.24.1"
+    "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@types/node": "^22.13.0",
+    "@types/node": "^22.13.4",
     "@types/yargs": "^17.0.33",
-    "prettier": "^3.4.2",
-    "semantic-release": "^24.2.1",
+    "prettier": "^3.5.1",
+    "semantic-release": "^24.2.2",
     "semantic-release-monorepo": "^8.0.2",
     "tsup": "^8.3.6",
     "typescript": "~5.7.3"
