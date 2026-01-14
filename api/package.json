@@ -16,7 +16,7 @@
     "@hono/node-server": "^1.13.8",
     "@ts-rest/core": "^3.52.0",
     "@ts-rest/serverless": "^3.52.0",
-    "hono": "^4.10.3",
+    "hono": "^4.11.4",
     "jwt-decode": "^4.0.0",
     "mqtt": "^5.10.3",
     "zod": "^3.24.2"
